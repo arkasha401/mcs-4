@@ -166,6 +166,6 @@ impl Registers {
         }
     }
 pub struct ComDecoder {
-    machine_instr: HashMap<String, String>,
-    io_ram: HashMap<String, String>
+    machine_instr: HashMap<String, u16>,
+    io_ram: HashMap<String, u16>
 }
