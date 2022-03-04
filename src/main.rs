@@ -10,7 +10,6 @@ fn main() {
     let mut ram = Memory::new(4096);
     rom.reset();
     rom.set(0, 0xA0);
-    println!("{:X}",rom.get(0));
     cpu.reset();
 
 

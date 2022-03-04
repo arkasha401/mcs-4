@@ -38,7 +38,7 @@ pub struct CPU {
     registers: Registers,
     pc: u16,
     stack: Stack,
-    accum: u8
+    accum: u8,
 }
 
 impl CPU {
@@ -47,8 +47,7 @@ impl CPU {
             registers: Registers::new(),
             pc: 1, 
             stack: Stack::new(),
-            accum: 0
-
+            accum: 0,
         }   
     }
     pub fn reset(&mut self) {
@@ -165,7 +164,28 @@ impl Registers {
             self.r15 = 0;
         }
     }
-pub struct ComDecoder {
-    machine_instr: HashMap<String, u16>,
-    io_ram: HashMap<String, u16>
+
+pub struct Instructions {
+    instruction_set: HashMap<u8, String>,
+    instr_time: [Vec<String>; 2],
+    instr_lenght: [Vec<String>; 2],
+    instr_type: [Vec<String>; 2]
 }
+
+impl Default for Instructions {
+    fn default() -> Self {
+        Instructions::new()
+    }
+}
+
+impl Instructions {
+    pub fn new() -> Instructions {
+        Instructions {
+            instruction_set: Instructions::opcodes(),
+            instr_time: Instructions::time_instr(),
+            instr_lenght: Instructions::length_instr(),
+            instr_type: Instructions::type_instr(),
+            }
+        }
+}
+
