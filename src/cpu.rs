@@ -229,13 +229,44 @@ impl Instructions {
                     instruction_set.insert(0xC, "BBL".to_string());
                 } else if reg1 == 13 { 
                     instruction_set.insert(0xD, "LDM".to_string());
+                } else if reg1 == 14 {
+                    match reg2 {
+                        0 => instruction_set.insert(0xE0, "WRM".to_string()),
+                        1 => instruction_set.insert(0xE1, "WMP".to_string()),
+                        2 => instruction_set.insert(0xE2, "WRR".to_string()),
+                        3 => instruction_set.insert(0xE3, "WPM".to_string()),
+                        4 => instruction_set.insert(0xE4, "WR0".to_string()),
+                        5 => instruction_set.insert(0xE5, "WR1".to_string()),
+                        6 => instruction_set.insert(0xE6, "WR2".to_string()),
+                        7 => instruction_set.insert(0xE7, "WR3".to_string()),
+                        8 => instruction_set.insert(0xE8, "SBM".to_string()),
+                        9 => instruction_set.insert(0xE9, v: V)
 
+
+                    };
+                
+                } else if reg1 == 15 {
+                    match reg2 {
+                        0 => instruction_set.insert(0xF0, "CLB".to_string()),
+                        1 => instruction_set.insert(0xF1, "CLC".to_string()),
+                        2 => instruction_set.insert(0xF2, "IAC".to_string()),
+                        3 => instruction_set.insert(0xF3, "CMC".to_string()),
+                        5 => instruction_set.insert(0xF5, "RAL".to_string()),
+                        6 => instruction_set.insert(0xF6, "RAR".to_string()),
+                        7 => instruction_set.insert(0xF7, "TCC".to_string()),
+                        8 => instruction_set.insert(0xF8, "DAC".to_string()),
+                        9 => instruction_set.insert(0xF9, "TCS".to_string()),
+                        10 => instruction_set.insert(0xFA, "STC".to_string()),
+                        11 => instruction_set.insert(0xFB, "DAA".to_string()),
+                        12 => instruction_set.insert(0xFC, "KBP".to_string()),
+                        13 => instruction_set.insert(0xFD, "DCL".to_string()),
+                        _ => continue
+                    };
+                }
+
+            }
+    println!("{:?}", instruction_set)
         }
     }
-    println!("{:?}", instruction_set)
-    }
-}
-
-
 }
 
