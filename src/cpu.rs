@@ -166,10 +166,10 @@ impl Registers {
     }
 
 pub struct Instructions {
-    instruction_set: HashMap<u8, String>,
-    instr_time: [Vec<String>; 2],
-    instr_lenght: [Vec<String>; 2],
-    instr_type: [Vec<String>; 2]
+    instruction_set: (),
+    // instr_time: [Vec<String>; 2],
+    // instr_lenght: [Vec<String>; 2],
+    // instr_type: [Vec<String>; 2]
 }
 
 impl Default for Instructions {
@@ -182,10 +182,60 @@ impl Instructions {
     pub fn new() -> Instructions {
         Instructions {
             instruction_set: Instructions::opcodes(),
-            instr_time: Instructions::time_instr(),
-            instr_lenght: Instructions::length_instr(),
-            instr_type: Instructions::type_instr(),
+            // instr_time: Instructions::time_instr(),
+            // instr_lenght: Instructions::length_instr(),
+            // instr_type: Instructions::type_instr(),
             }
         }
+
+    pub fn opcodes() {
+        let mut instruction_set: HashMap<u8, String> = HashMap::new();
+        for reg1 in 0..15 {
+            for reg2 in 0..15 {
+                let opn = reg1 + reg2;
+                if reg1 == 0 {
+                    instruction_set.insert(0x0, "NOP".to_string());
+                } else if reg1 == 1 {
+                    instruction_set.insert(0x1, "JCN".to_string());
+                } else if reg1 == 2 {
+                    match reg2 { 
+                        0 => instruction_set.insert(0x20, "FIM".to_string()),
+                        1 => instruction_set.insert(0x21, "SRC".to_string()),
+                        _ => continue
+                    };
+                } else if reg1 == 3 { 
+                    match reg2 {
+                        0 => instruction_set.insert(0x30, "FIN".to_string()),
+                        1 => instruction_set.insert(0x31, "JIN".to_string()),
+                        _ => continue
+                    };
+                } else if reg1 == 4 {
+                    instruction_set.insert(0x4, "JUN".to_string());
+                } else if reg1 == 5 { 
+                    instruction_set.insert(0x5, "JMS".to_string());
+                } else if reg1 == 6 {
+                    instruction_set.insert(0x6, "INC".to_string());
+                } else if reg1 == 7 {
+                    instruction_set.insert(0x7, "ISZ".to_string());
+                } else if reg1 == 8 { 
+                    instruction_set.insert(0x8, "ADD".to_string());
+                } else if reg1 == 9 {
+                    instruction_set.insert(0x9, "SUB".to_string()); 
+                } else if reg1 == 10 { 
+                    instruction_set.insert(0xA, "LD".to_string());
+                } else if reg1 == 11 { 
+                    instruction_set.insert(0xB, "XCH".to_string());
+                } else if reg1 == 12 { 
+                    instruction_set.insert(0xC, "BBL".to_string());
+                } else if reg1 == 13 { 
+                    instruction_set.insert(0xD, "LDM".to_string());
+
+        }
+    }
+    println!("{:?}", instruction_set)
+    }
+}
+
+
 }
 
