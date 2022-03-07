@@ -164,10 +164,9 @@ impl Registers {
             self.r15 = 0;
         }
     }
-<<<<<<< HEAD
 
 pub struct Instructions {
-    instruction_set: (),
+    pub instruction_set: (),
     // instr_time: [Vec<String>; 2],
     // instr_lenght: [Vec<String>; 2],
     // instr_type: [Vec<String>; 2]
@@ -191,9 +190,97 @@ impl Instructions {
 
     pub fn opcodes() {
         let mut instruction_set: HashMap<u8, String> = HashMap::new();
+        let mut counter: u8 = 0;
         for reg1 in 0..15 {
             for reg2 in 0..15 {
+                if reg1 == 0x0 {
+                    instruction_set.insert(0x0, "NOP".to_string());
+                } else if reg1 == 0x1 {
+                    instruction_set.insert(0x1, "JCN".to_string());
+                } else if reg1 == 0x2 {
+                    match reg2 { 
+                        0x0 => instruction_set.insert(0x2, "FIM".to_string()),
+                        0x1 => instruction_set.insert(0x3, "SRC".to_string()),
+                        _ => continue
+                    };
+                } else if reg1 == 0x3 { 
+                    match reg2 {
+                        0x0 => instruction_set.insert(0x4, "FIN".to_string()),
+                        0x1 => instruction_set.insert(0x5, "JIN".to_string()),
+                        _ => continue
+                    };
+                } else if reg1 == 0x4 {
+                    instruction_set.insert(0x6, "JUN".to_string());
+                } else if reg1 == 0x5 { 
+                    instruction_set.insert(0x7, "JMS".to_string());
+                } else if reg1 == 0x6 {
+                    instruction_set.insert(0x8, "INC".to_string());
+                } else if reg1 == 0x7 {
+                    instruction_set.insert(0x9, "ISZ".to_string());
+                } else if reg1 == 0x8 { 
+                    instruction_set.insert(0xA, "ADD".to_string());
+                } else if reg1 == 0x9 {
+                    instruction_set.insert(0xB, "SUB".to_string()); 
+                } else if reg1 == 0xA { 
+                    instruction_set.insert(0xC, "LD".to_string());
+                } else if reg1 == 0xB { 
+                    instruction_set.insert(0xD, "XCH".to_string());
+                } else if reg1 == 0xC { 
+                    instruction_set.insert(0xE, "BBL".to_string());
+                } else if reg1 == 0xD { 
+                    instruction_set.insert(0xF, "LDM".to_string());
+                } else if reg1 == 0xE {
+                    for reg2 in 0..15{
+                        match reg2 {
+                            0x0 => instruction_set.insert(0xE0, "WRM".to_string()),
+                            0x1 => instruction_set.insert(0xE1, "WMP".to_string()),
+                            0x2 => instruction_set.insert(0xE2, "WRR".to_string()),
+                            0x3 => instruction_set.insert(0xE3, "WPM".to_string()),
+                            0x4 => instruction_set.insert(0xE4, "WR0".to_string()),
+                            0x5 => instruction_set.insert(0xE5, "WR1".to_string()),
+                            0x6 => instruction_set.insert(0xE6, "WR2".to_string()),
+                            0x7 => instruction_set.insert(0xE7, "WR3".to_string()),
+                            0x8 => instruction_set.insert(0xE8, "SBM".to_string()),
+                            0x9 => instruction_set.insert(0xE9, "RDM".to_string()),
+                            0xA => instruction_set.insert(0xEA, "RDR".to_string()),
+                            0xB => instruction_set.insert(0xEB, "ADM".to_string()),
+                            0xC => instruction_set.insert(0xEC, "RD0".to_string()),
+                            0xD => instruction_set.insert(0xED, "RD1".to_string()), 
+                            0xE => instruction_set.insert(0xEE, "RD2".to_string()),
+                            0xF => instruction_set.insert(0xEF, "RD3".to_string()),
+                            _ => None
+                        };
+
+
+
+                    };
+                
+                } else if reg1 == 15 {
+                    match reg2 {
+                        0x0 => instruction_set.insert(0xF1, "CLB".to_string()),
+                        0x1 => instruction_set.insert(0xF2, "CLC".to_string()),
+                        0x2 => instruction_set.insert(0xF3, "IAC".to_string()),
+                        0x3 => instruction_set.insert(0xF4, "CMC".to_string()),
+                        0x5 => instruction_set.insert(0xF6, "RAL".to_string()),
+                        0x6 => instruction_set.insert(0xF7, "RAR".to_string()),
+                        0x7 => instruction_set.insert(0xF8, "TCC".to_string()),
+                        0x8 => instruction_set.insert(0xF9, "DAC".to_string()),
+                        0x9 => instruction_set.insert(0xFA, "TCS".to_string()),
+                        0xA=> instruction_set.insert(0xFB, "STC".to_string()),
+                        0xB => instruction_set.insert(0xFC, "DAA".to_string()),
+                        0xC => instruction_set.insert(0xFD, "KBP".to_string()),
+                        0xD => instruction_set.insert(0xFE, "DCL".to_string()),
+                        _ => None
+                    };
+                }
+            counter += 1;    
             }
+
         }
-    }  
+        println!("{:?}", instruction_set);
+        let size = instruction_set.keys().len();
+        println!("{}", size);
+    }
+
+    
 }
