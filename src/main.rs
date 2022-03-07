@@ -3,10 +3,6 @@ use memory::Memory;
 mod cpu;
 use cpu::CPU;
 use cpu::Instructions;
-
-
-
-
 fn main() {
     let mut cpu = CPU::new();
     let mut rom = Memory::new(4096);
