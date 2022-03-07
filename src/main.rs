@@ -12,6 +12,4 @@ fn main() {
     rom.reset();
     rom.set(0, 0xA0);
     cpu.reset();
-    let instr = Instructions::new();
-
 }

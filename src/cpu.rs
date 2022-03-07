@@ -164,6 +164,7 @@ impl Registers {
             self.r15 = 0;
         }
     }
+<<<<<<< HEAD
 
 pub struct Instructions {
     instruction_set: (),
@@ -278,5 +279,53 @@ impl Instructions {
         }
         println!("{:?}", instruction_set);
     }
+=======
+pub enum Instructions {
+    NOP,
+    JCN,
+    FIM,
+    FIN,
+    JIN,
+    JUN,
+    JMS,
+    INC,
+    ISZ,
+    ADD,
+    SUB,
+    LD,
+    XCH,
+    BBL,
+    LDM,
+    CLB,
+    CLC,
+    IAC,
+    CMC,
+    RAL,
+    RAR,
+    TCC,
+    DAC,
+    TCS,
+    STC,
+    DAA,
+    KBP,
+    DCL,
+    SRC,
+    WRM,
+    WMP,
+    WRR,
+    WPM,
+    WR0,
+    WR1,
+    WR2,
+    WR3,
+    SBM,
+    RDM,
+    RDR,
+    ADM,
+    RD0,
+    RD1,
+    RD2,
+    RD3
+>>>>>>> b83e019318f64b0ce601a8bd9a7993229d3d55d3
 }
 
