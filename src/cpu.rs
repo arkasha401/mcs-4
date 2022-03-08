@@ -166,8 +166,8 @@ impl Registers {
     }
 
 pub struct Instructions {
-    pub instruction_set: (),
-    // instr_time: [Vec<String>; 2],
+    instruction_set: HashMap<String, u8>,
+    pub instr_lenght: (),
     // instr_lenght: [Vec<String>; 2],
     // instr_type: [Vec<String>; 2]
 }
@@ -182,13 +182,13 @@ impl Instructions {
     pub fn new() -> Instructions {
         Instructions {
             instruction_set: Instructions::opcodes(),
-            // instr_time: Instructions::time_instr(),
+            instr_lenght: Instructions::instruction_lenght(),
             // instr_lenght: Instructions::length_instr(),
             // instr_type: Instructions::type_instr(),
             }
         }
 
-    pub fn opcodes() {
+    pub fn opcodes() -> HashMap<String, u8>{
         let mut instruction_set: HashMap<String, u8> = HashMap::new();
         let mut counter: u8 = 0;
         for reg1 in 0..16 {
@@ -270,10 +270,30 @@ impl Instructions {
                 }
             }
         }
-        println!("{:?}", instruction_set);
-        let size = instruction_set.keys().len();
-        println!("{}", size);
+        instruction_set
     }
+    pub fn instruction_lenght()  {
+        let one_byte_instr: Vec<String> = vec![
+            "NOP".to_string(),
+            "LDM".to_string(),
+            "LD".to_string(),
+            "XCH".to_string(),
+            "ADD".to_string(),
+            "SUB".to_string(),
+            "INC".to_string(),
+            "BBL".to_string(),
+            "JIN".to_string(),
+            "SRC".to_string(),
+            "FIN".to_string()
+        ];
 
-    
+        let two_byte_instr: Vec<String> = vec![
+            "JUN".to_string(),
+            "JMS".to_string(), 
+            "JCN".to_string(),
+            "ISZ".to_string(),
+            "FIM".to_string()
+        ];
+            println!("{:?}",[one_byte_instr,two_byte_instr])
+    }
 }
