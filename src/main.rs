@@ -11,5 +11,5 @@ fn main() {
     rom.set(0, 0xA0);
     cpu.reset();
     let run_instr = Instructions::new();
-    println!("{:?}", run_instr.instr_lenght)
+    println!("{:?}", run_instr.instruction_lenght)
 }

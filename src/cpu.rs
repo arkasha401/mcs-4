@@ -167,9 +167,8 @@ impl Registers {
 
 pub struct Instructions {
     instruction_set: HashMap<String, u8>,
-    pub instr_lenght: (),
-    // instr_lenght: [Vec<String>; 2],
-    // instr_type: [Vec<String>; 2]
+    instruction_type: [Vec<String>; 3],
+    pub instruction_lenght: [Vec<String>; 2],
 }
 
 impl Default for Instructions {
@@ -182,9 +181,9 @@ impl Instructions {
     pub fn new() -> Instructions {
         Instructions {
             instruction_set: Instructions::opcodes(),
-            instr_lenght: Instructions::instruction_lenght(),
+            instruction_type: Instructions::instruction_type(),
+            instruction_lenght: Instructions::instruction_lenght(),
             // instr_lenght: Instructions::length_instr(),
-            // instr_type: Instructions::type_instr(),
             }
         }
 
@@ -272,8 +271,63 @@ impl Instructions {
         }
         instruction_set
     }
-    pub fn instruction_lenght()  {
+    pub fn instruction_lenght() -> [Vec<String>; 2] {
         let one_byte_instr: Vec<String> = vec![
+            "NOP".to_string(),
+            "SRC".to_string(),
+            "FIN".to_string(),
+            "JIN".to_string(),
+            "INC".to_string(),
+            "ADD".to_string(),
+            "SUB".to_string(),
+            "LD".to_string(),
+            "XCH".to_string(),
+            "BBL".to_string(),
+            "LDM".to_string(),
+            "WRM".to_string(),
+            "WMP".to_string(),
+            "WRR".to_string(),
+            "WR0".to_string(),
+            "WR1".to_string(),
+            "WR2".to_string(),
+            "WR3".to_string(),
+            "SBM".to_string(),
+            "RDM".to_string(),
+            "RDR".to_string(),
+            "ADM".to_string(),
+            "RD0".to_string(),
+            "RD1".to_string(),
+            "RD2".to_string(),
+            "RD3".to_string(),
+            "CLB".to_string(),
+            "CLC".to_string(),
+            "IAC".to_string(),
+            "CMC".to_string(),
+            "CMA".to_string(),
+            "RAL".to_string(),
+            "RAR".to_string(),
+            "TCC".to_string(),
+            "DAC".to_string(),
+            "TCS".to_string(),
+            "STC".to_string(),
+            "DAA".to_string(),
+            "KBP".to_string(),
+            "DCL".to_string(), 
+        ];
+
+        let two_byte_instr: Vec<String> = vec![
+            "JUN".to_string(),
+            "JMS".to_string(), 
+            "JCN".to_string(),
+            "ISZ".to_string(),
+            "FIM".to_string()
+        ];
+        
+        [one_byte_instr, two_byte_instr]
+    }
+
+    pub fn instruction_type() -> [Vec<String>; 3]{
+        let machine_instructions: Vec<String> = vec![
             "NOP".to_string(),
             "LDM".to_string(),
             "LD".to_string(),
@@ -284,16 +338,49 @@ impl Instructions {
             "BBL".to_string(),
             "JIN".to_string(),
             "SRC".to_string(),
-            "FIN".to_string()
-        ];
-
-        let two_byte_instr: Vec<String> = vec![
+            "FIN".to_string(),
             "JUN".to_string(),
-            "JMS".to_string(), 
+            "JMS".to_string(),
             "JCN".to_string(),
             "ISZ".to_string(),
             "FIM".to_string()
         ];
-            println!("{:?}",[one_byte_instr,two_byte_instr])
+
+        let io_instructions: Vec<String> = vec![
+            "RDM".to_string(),
+            "RD0".to_string(),
+            "RD1".to_string(),
+            "RD2".to_string(),
+            "RD3".to_string(),
+            "RDR".to_string(),
+            "WRM".to_string(),
+            "WR0".to_string(),
+            "WR1".to_string(),
+            "WR2".to_string(),
+            "WR3".to_string(),
+            "WRR".to_string(),
+            "WMP".to_string(),
+            "ADM".to_string(),
+            "SBM".to_string()
+        ];
+
+        let accum_instructions: Vec<String> = vec![
+            "CLB".to_string(),
+            "CLC".to_string(),
+            "CMC".to_string(),
+            "STC".to_string(),
+            "CMA".to_string(),
+            "IAC".to_string(),
+            "DAC".to_string(),
+            "RAL".to_string(),
+            "RAR".to_string(),
+            "TCC".to_string(),
+            "DAA".to_string(),
+            "TCS".to_string(),
+            "KBP".to_string(),
+            "DCL".to_string(),
+
+        ];
+        [machine_instructions, io_instructions, accum_instructions]
     }
 }
