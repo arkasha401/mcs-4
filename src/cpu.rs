@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use crate::Memory;
 
 struct Stack {
     sp: u8,
@@ -58,6 +59,48 @@ impl CPU {
     
         
     }
+
+    pub fn run_instruction(&mut self) {
+        let (opr, opa) = Memory::get();
+        match opr { 
+            0x0 => { },
+            0x1 => self.jcn_op(),
+            0x2 => match opr {
+                0x0 => self.fim_op(),
+                0x1 => self.src_op(),
+                _ => panic!()
+            },
+            0x3 => match opa { 
+                0x0 => self.fin_op(),
+                0x1 => self.jin_op(),
+                _ => panic!()
+            },
+            0x4 => self.jun_op(),
+            0x5 => self.jms_op(), 
+            0x6 => self.inc_op(),
+            0x7 => self.isz_op(),
+            0x8 => self.add_op(), 
+            0x9 => self.sub_op(),
+            0xA => self.ld_op(),
+            0xB => self.xch_op(),
+            0xC => self.bbl_op(),
+            0xD => self.ldm_op(),
+            0xE => match opa {
+                0x0 => self.wrm_op(),
+                0x1 => self.wmp_op(),
+                0x2 => self.wrr_op(), 
+                0x4 => self.wr0_op(),
+                0x5 => self.wr1_op(),
+                0x6 => self.wr2_op(),
+                0x7 => self.wr3_op(),
+                0x8 => self.sbm_op(),
+                0x9 => self.rdm_op(),
+                0xA => self.rdr_op()
+                
+
+            }
+        }
+    } 
 }
 
 struct Registers {
