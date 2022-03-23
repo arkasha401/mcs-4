@@ -95,11 +95,21 @@ impl CPU {
                 0x7 => self.wr3_op(),
                 0x8 => self.sbm_op(),
                 0x9 => self.rdm_op(),
-                0xA => self.rdr_op()
-                
-
+                0xA => self.rdr_op(),
+                0xB => self.adm_op(),
+                0xC => self.rd0_op(),
+                0xD => self.rd1_op(),
+                0xE => self.rd2_op(),
+                0xF => self.rd3_op()
+            },
+            0xF => match opa {
+                0x0 => self.clb_op(),
+                0x1 => self.clc_op(),
+                0x2 => self.iac_op()
             }
+        
         }
+
     } 
 }
 
