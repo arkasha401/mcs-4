@@ -105,7 +105,18 @@ impl CPU {
             0xF => match opa {
                 0x0 => self.clb_op(),
                 0x1 => self.clc_op(),
-                0x2 => self.iac_op()
+                0x2 => self.iac_op(),
+                0x3 => self.cmc_op(),
+                0x4 => self.cma_op(),
+                0x5 => self.ral_op(),
+                0x6 => self.rar_op(),
+                0x7 => self.tcc_op(),
+                0x8 => self.dac_op(),
+                0x9 => self.tcs_op(),
+                0xA => self.stc_op(),
+                0xB => self.daa_op(),
+                0xC => self.kbp_op(),
+                0xD => self.dcl_op()
             }
         
         }
