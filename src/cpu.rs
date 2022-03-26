@@ -40,6 +40,7 @@ pub struct CPU {
     pc: u16,
     stack: Stack,
     accum: u8,
+    carry: u8
 }
 
 impl CPU {
@@ -49,15 +50,17 @@ impl CPU {
             pc: 1, 
             stack: Stack::new(),
             accum: 0,
+            carry: 0, 
+
         }   
     }
+
     pub fn reset(&mut self) {
         self.registers.reset();
         self.pc = 0;
         self.stack.reset();
         self.accum = 0;
-    
-        
+        self.carry = 0 
     }
 
     pub fn run_instruction(&mut self) {
@@ -71,7 +74,7 @@ impl CPU {
                 _ => panic!()
             },
             0x3 => match opa { 
-                0x0 => self.fin_op(),
+                0x0 => self.fin_op(),   
                 0x1 => self.jin_op(),
                 _ => panic!()
             },
@@ -121,7 +124,12 @@ impl CPU {
         
         }
 
-    } 
+    }
+    
+    pub fn jcn_op(&mut self) { 
+        let (f_p, s_p) = Memory::get();
+
+    }
 }
 
 struct Registers {
