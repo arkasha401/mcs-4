@@ -40,7 +40,9 @@ pub struct CPU {
     pc: u16,
     stack: Stack,
     accum: u8,
-    carry: u8
+    carry_f: bool,
+    zero_f: bool
+
 }
 
 impl CPU {
@@ -50,17 +52,19 @@ impl CPU {
             pc: 1, 
             stack: Stack::new(),
             accum: 0,
-            carry: 0, 
-
+            carry_f: false,
+            zero_f: false 
+            
         }   
     }
-
+    
     pub fn reset(&mut self) {
         self.registers.reset();
         self.pc = 0;
         self.stack.reset();
         self.accum = 0;
-        self.carry = 0 
+        self.carry_f = false;
+        self.zero_f = false
     }
 
     pub fn run_instruction(&mut self) {
