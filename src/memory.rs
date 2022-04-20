@@ -21,3 +21,5 @@ impl Memory{
         self.data[adress]
     }
 }
+
+get();
