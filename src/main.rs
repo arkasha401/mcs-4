@@ -1,4 +1,5 @@
 mod memory;
+mod cpu;
 pub fn main() {
     let mut rom = memory::Memory::new();
     rom.load_byte_rom(0, 9);

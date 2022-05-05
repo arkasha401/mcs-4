@@ -5,12 +5,6 @@ pub struct Memory {
     rom: [u8; MAX_ROM],
     ram: [u8; MAX_RAM]
 }
-impl Default for Memory {
-    fn default() -> Self {
-        Memory::new()
-    }
-}
-
 impl Memory {
     pub fn new() -> Memory {
         Memory {
