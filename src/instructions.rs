@@ -5,12 +5,6 @@ pub struct Instructions {
     instruction_clocktime: [Vec<String>; 2]
 }
 
-impl Default for Instructions {
-    fn default() -> Self {
-        Instructions::new()
-    }
-}
-
 impl Instructions {
     pub fn new() -> Instructions {
         Instructions {
@@ -20,7 +14,6 @@ impl Instructions {
             }
         }
 
-    }
     pub fn instruction_lenght() -> [Vec<String>; 2] {
         let one_byte_instr: Vec<String> = vec![
             "NOP".to_string(),
@@ -187,4 +180,5 @@ impl Instructions {
         ];
         [two_clock, four_clock]
     }
+
 }

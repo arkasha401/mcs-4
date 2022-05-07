@@ -71,12 +71,13 @@ impl CPU {
         let upper_byte: u8 = (opcode >> 4) & 0b1111;
         let lower_byte: u8 = opcode & 0b1111;
             match upper_byte { 
-                0 => "NOP".to_string(),
-                13 => LDM_OP()
+                0 => (),
+                13 => self.opr_ldm(lower_byte),
+                _ => ()
             }
     }
 
-    pub fn LDM_OP(&mut self, opa:u8){ 
+    pub fn opr_ldm(&mut self, opa:u8){ 
         self.a_r = opa;
         println!("success")
     }

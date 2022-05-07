@@ -10,6 +10,4 @@ pub fn main() {
     let mut execution = cpu::CPU::new();
     execution.execute(&mut rom);
     let instruction_set =  instructions::Instructions::new();
-    println!("{:?}", execution);
-    
 }
