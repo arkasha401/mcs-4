@@ -2,9 +2,10 @@ const MAX_ROM: usize = 4096;
 const MAX_RAM: usize = 1024;
 
 pub struct Memory {
-    rom: [u8; MAX_ROM],
-    ram: [u8; MAX_RAM]
+    pub rom: [u8; MAX_ROM],
+    pub ram: [u8; MAX_RAM]
 }
+
 impl Memory {
     pub fn new() -> Memory {
         Memory {

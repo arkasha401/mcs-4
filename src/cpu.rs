@@ -1,5 +1,5 @@
 use crate::memory;
-
+use crate::instructions;
 const MAX_INDEX_REGISTERS:usize = 16; 
 
 pub struct CPU { 
@@ -51,9 +51,37 @@ impl CPU {
         }
     }
 
-    pub fn execute(&mut self, mem: &mut memory::Memory) {
-
+    pub fn execute(&mut self, mem: &mut memory::Memory)  {
+        let instruct: u8 = self.fetch_opcode(mem);
+        let instr = self.decode(instruct);
     } 
+
+    pub fn fetch_byte(&mut self, mem: &mut memory::Memory, adress: &usize) {
+        let byte: u8 = mem.get_byte_ram(*adress);
+    }
+
+
+    pub fn fetch_opcode(&mut self, mem: &mut memory::Memory) -> u8 {
+        let mut opcode: u8 = mem.rom[self.pc as usize];
+        let opcode: u8 = mem.get_byte_rom(self.pc as usize);
+        opcode
+    }
+
+    pub fn decode(&mut self, opcode: u8) {
+        
+        if opcode == 208 {
+            let instruction = "ldm".to_string();
+
+
+        }
+        else {
+            eprint!("ERROR")
+        }
+
+
+    }
+    
+
 }
 
 
