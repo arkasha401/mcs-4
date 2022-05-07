@@ -72,6 +72,7 @@ impl CPU {
         let lower_byte: u8 = opcode & 0b1111;
             match upper_byte { 
                 0 => (),
+                10 => self.opr_ld(lower_byte),
                 13 => self.opr_ldm(lower_byte),
                 _ => ()
             }
@@ -80,6 +81,28 @@ impl CPU {
     pub fn opr_ldm(&mut self, opa:u8){ 
         self.a_r = opa;
         println!("success")
+    }
+
+    pub fn opr_ld(&mut self, opa: u8) { 
+            match opa { 
+                1 => self.a_r = self.r1,
+                2 => self.a_r = self.r2,
+                3 => self.a_r = self.r3,
+                4 => self.a_r = self.r4,
+                5 => self.a_r = self.r5,
+                6 => self.a_r = self.r6,
+                7 => self.a_r = self.r7,
+                8 => self.a_r = self.r8,
+                9 => self.a_r = self.r9,
+                10 => self.a_r = self.r10,
+                11 => self.a_r = self.r11,
+                12 => self.a_r = self.r12,
+                13 => self.a_r = self.r13,
+                14 => self.a_r = self.r14,
+                15 => self.a_r = self.r15,
+                16 => self.a_r = self.r16,
+                _=> eprintln!("ERROR")
+            }
     }
 
 
