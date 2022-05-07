@@ -68,19 +68,16 @@ impl CPU {
     }
 
     pub fn decode(&mut self, opcode: u8) {
-        
+        let r1: u8 = (opcode >> 4) & 0b1111;
+        let r2: u8 = opcode & 0b1111;
         if opcode == 208 {
             let instruction = "ldm".to_string();
-
-
         }
         else {
             eprint!("ERROR")
         }
-
-
     }
-    
+
 
 }
 

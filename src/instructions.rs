@@ -1,5 +1,6 @@
+use std::collections::HashMap;
 pub struct Instructions {
-    instruction_set: HashMap<String, u8>,
+    pub instruction_set: HashMap<String, u8>,
     instruction_type: [Vec<String>; 3],
     instruction_lenght: [Vec<String>; 2],
     instruction_clocktime: [Vec<String>; 2]
@@ -23,47 +24,46 @@ impl Instructions {
 
     pub fn opcodes() -> HashMap<String, u8>{
         let mut instruction_set: HashMap<String, u8> = HashMap::new();
-        let mut counter: u8 = 0;
-        for reg1 in 0..16 {
+        for reg1 in (0..241).step_by(16){
             for reg2 in 0..16 {
                 let opc = reg1 + reg2; 
-                if reg1 == 0x0 {
+                if reg1 == 0x00 {
                     instruction_set.insert("NOP".to_string(), opc);
-                } else if reg1 == 0x1 {
+                } else if reg1 == 0x10 {
                     instruction_set.insert("JCN".to_string(), opc);
-                } else if reg1 == 0x2 {
+                } else if reg1 == 0x20 {
                     match reg2 { 
                         0 => instruction_set.insert("FIM".to_string(), opc),
                         1 => instruction_set.insert("SRC".to_string(), opc),
                         _ => break
                     };
-                } else if reg1 == 3 { 
+                } else if reg1 == 0x30 { 
                     match reg2 {
                         0x0 => instruction_set.insert("FIN".to_string(), opc),
                         0x1 => instruction_set.insert("JIM".to_string(), opc),
                         _ => break
                     };
-                } else if reg1 == 4 {
+                } else if reg1 == 0x40 {
                     instruction_set.insert("JUN".to_string(), opc);
-                } else if reg1 == 5 { 
+                } else if reg1 == 0x50 { 
                     instruction_set.insert("JMS".to_string(), opc);
-                } else if reg1 == 6 {
+                } else if reg1 == 0x60 {
                     instruction_set.insert("INC".to_string(), opc);
-                } else if reg1 == 7 {
+                } else if reg1 == 0x70 {
                     instruction_set.insert("ISZ".to_string(), opc);
-                } else if reg1 == 8 { 
+                } else if reg1 == 0x80 { 
                     instruction_set.insert("ADD".to_string(), opc);
-                } else if reg1 == 9 {
+                } else if reg1 == 0x90 {
                     instruction_set.insert("SUB".to_string(), opc); 
-                } else if reg1 == 10 { 
+                } else if reg1 == 0xA0 { 
                     instruction_set.insert("LD".to_string(), opc);
-                } else if reg1 == 11 { 
+                } else if reg1 == 0xB0 { 
                     instruction_set.insert("XCH".to_string(), opc);
-                } else if reg1 == 12 { 
+                } else if reg1 == 0xC0 { 
                     instruction_set.insert("BBL".to_string(), opc);
-                } else if reg1 == 13 { 
+                } else if reg1 == 0xD0 { 
                     instruction_set.insert("LDM".to_string(), opc);
-                } else if reg1 == 14 {
+                } else if reg1 == 0xE0 {
                     match reg2 {
                         0x0 => instruction_set.insert("WRM".to_string(), opc),
                         0x1 => instruction_set.insert("WMP".to_string(), opc),
@@ -83,7 +83,7 @@ impl Instructions {
                         0xF => instruction_set.insert("RD3".to_string(), opc),
                         _ => break
                     };
-                } else if reg1 == 15 {
+                } else if reg1 == 0xF0 {
                     match reg2 { 
                         0 => instruction_set.insert("CLB".to_string(), opc),
                         1 => instruction_set.insert("CLC".to_string(), opc),
