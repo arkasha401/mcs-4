@@ -62,8 +62,9 @@ impl CPU {
 
 
     pub fn fetch_opcode(&mut self, mem: &mut memory::Memory) -> u8 {
-        let mut opcode: u8 = mem.rom[self.pc as usize];
-        let opcode: u8 = mem.get_byte_rom(self.pc as usize);
+        let first_part: u8 = mem.get_byte_rom(self.pc as usize) << 4;
+        let second_part: u8 = mem.get_byte_rom(self.pc as usize);
+        let opcode: u8 = first_part + second_part;
         opcode
     }
 
