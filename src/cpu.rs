@@ -4,7 +4,7 @@ const MAX_INDEX_REGISTERS: usize = 16;
 
 pub struct CPU { 
     a_r: u8, //u4
-    c_r: bool,
+    c_r: u8, //u1 
     pc: u16,
     stack: [u16;3],
     index_registers: [u8; MAX_INDEX_REGISTERS]
@@ -14,7 +14,7 @@ impl CPU {
     pub fn new() -> CPU {
         CPU {
             a_r: 0,
-            c_r: false,
+            c_r: 0,
             pc: 0,
             stack: [0;3],
             index_registers: [0;MAX_INDEX_REGISTERS]
@@ -64,14 +64,18 @@ impl CPU {
     
 
     pub fn opr_add(&mut self, opa: u8){
+        if self.a_r + self.index_registers[opa as usize] + self.c_r > 15 {
+            self.a_r = self.a_r & 0b1111;
+            self.c_r = 1
+        }
+        self.a_r += self.index_registers[opa as usize] + self.c_r & 0b1111 ;
+        self.c_r = 0
 
     }
 
     pub fn opr_sub(&mut self, opa: u8) {
-
-
+    
     }
-
 
 }
 
