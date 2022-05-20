@@ -74,7 +74,13 @@ impl CPU {
     }
 
     pub fn opr_sub(&mut self, opa: u8) {
-    
+        if self.c_r == 1 {
+            self.a_r = self.a_r + self.index_registers[opa as usize] + self.c_r;
+            self.c_r = 0 
+        }
+
+        self.a_r = self.a_r + self.index_registers[opa as usize] + self.c_r;
+        self.c_r = 1;
     }
 
 }
