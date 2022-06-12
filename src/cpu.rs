@@ -102,6 +102,11 @@ impl CPU {
     } 
 
     pub fn jin_opr(&mut self, opa: u8) {
+        if self.pc == 0b000011111111 {
+            self.pc += 1 << 8
+        }
         let (d1, d2) = (self.index_registers[opa as usize], self.index_registers[opa as usize + 1]);
+        self.pc = d1 as u16;
+        self.pc += (d2 as u16) << 4;
     } 
 }
