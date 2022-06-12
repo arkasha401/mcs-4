@@ -7,6 +7,7 @@ pub struct CPU {
     c_r: u8, //u1 
     pc: u16,
     stack: [u16;3],
+    stack_p: u8, // u3
     index_registers: [u8; MAX_INDEX_REGISTERS]
 }
 
@@ -17,7 +18,9 @@ impl CPU {
             c_r: 0,
             pc: 0,
             stack: [0;3],
+            stack_p: 0, // u3
             index_registers: [0;MAX_INDEX_REGISTERS]
+
         }
     }
 
@@ -44,6 +47,7 @@ impl CPU {
                 10 => self.opr_ld(opa),
                 11 => self.opr_xch(opa),
                 13 => self.opr_ldm(opa),
+
                 _ => ()
             }
     }
@@ -83,6 +87,21 @@ impl CPU {
         self.c_r = 1;
     }
 
+    pub fn inc_opr(&mut self, opa: u8) {
+        self.index_registers[opa as usize] += 1;
+        if self.index_registers[opa as usize] > 15 { 
+            self.index_registers[opa as usize] = 0;
+        }
+    }
+
+
+    pub fn fin_opr(&mut self, opa: u8, mem: &mut memory::Memory) { 
+        let (data1, data2) = self.fetch_opcode(mem);
+        self.index_registers[opa as usize] = data1;
+        self.index_registers[(opa + 1) as usize] = data2;
+    } 
+
+    pub fn jin_opr(&mut self, opa: u8) {
+        let (d1, d2) = (self.index_registers[opa as usize], self.index_registers[opa as usize + 1]);
+    } 
 }
-
-
