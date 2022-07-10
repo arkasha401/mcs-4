@@ -1,6 +1,6 @@
 mod memory;
 mod cpu;
-mod instructions;
+
 use std::env;
 
 pub fn main() {
@@ -9,5 +9,4 @@ pub fn main() {
     rom.load_byte_rom(0, 212);
     let mut execution = cpu::CPU::new();
     execution.execute(&mut rom);
-    let instruction_set =  instructions::Instructions::new();
 }

@@ -1,5 +1,4 @@
 use crate::memory;
-use crate::instructions;
 const MAX_INDEX_REGISTERS: usize = 16; 
 
 pub struct CPU { 
@@ -24,6 +23,20 @@ impl CPU {
         }
     }
 
+    pub fn pop(&mut self) -> u16 {
+        if self.stack_p == 0 as u8 {
+            panic!("ERROR: Trying to pop nothing");
+        }
+        
+        self.stack_p -= 1;
+        self.stack[self.stack_p as usize]
+    }
+
+    pub fn push (&mut self, d:u16) {
+        self.stack[self.stack_p as usize] = d;
+        self.stack_p += 1;
+    }
+
     pub fn execute(&mut self, mem: &mut memory::Memory)  {
         let instruct: (u8, u8) = self.fetch_opcode(mem);
         let instr = self.decode(instruct);
@@ -32,7 +45,6 @@ impl CPU {
     pub fn fetch_byte(&mut self, mem: &mut memory::Memory, adress: &usize) {
         let byte: u8 = mem.get_byte_ram(*adress);
     }
-
 
     pub fn fetch_opcode(&mut self, mem: &mut memory::Memory) -> (u8, u8) {
         let first_part: u8 = mem.get_byte_rom(self.pc as usize) << 4;
@@ -47,10 +59,13 @@ impl CPU {
                 10 => self.opr_ld(opa),
                 11 => self.opr_xch(opa),
                 13 => self.opr_ldm(opa),
-
                 _ => ()
             }
     }
+
+
+    // 1 word instructions 
+
 
     pub fn opr_ldm(&mut self, opa:u8){ 
         self.a_r = opa;
@@ -65,7 +80,6 @@ impl CPU {
         self.a_r = self.index_registers[opa as usize];
         self.index_registers[opa as usize] = temp
     }
-    
 
     pub fn opr_add(&mut self, opa: u8){
         if self.a_r + self.index_registers[opa as usize] + self.c_r > 15 {
@@ -94,12 +108,18 @@ impl CPU {
         }
     }
 
-
     pub fn fin_opr(&mut self, opa: u8, mem: &mut memory::Memory) { 
         let (data1, data2) = self.fetch_opcode(mem);
         self.index_registers[opa as usize] = data1;
         self.index_registers[(opa + 1) as usize] = data2;
     } 
+
+
+    pub fn bbl_opr(&mut self, opa: u8) {
+        if self.stack_p != 0 {
+
+        }
+    }
 
     pub fn jin_opr(&mut self, opa: u8) {
         if self.pc == 0b000011111111 {
@@ -111,6 +131,7 @@ impl CPU {
     }
     
     pub fn jun_opr(&mut self, opa: u8) {
-
+        self.pop();
+        self.a_r = opa
     }
 }
