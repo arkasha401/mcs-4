@@ -116,9 +116,7 @@ impl CPU {
 
 
     pub fn bbl_opr(&mut self, opa: u8) {
-        if self.stack_p != 0 {
-
-        }
+        
     }
 
     pub fn jin_opr(&mut self, opa: u8) {
