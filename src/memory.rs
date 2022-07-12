@@ -1,33 +1,75 @@
-const MAX_ROM: usize = 4096;
-const MAX_RAM: usize = 1024;
+const RAM_NUM_OF_REGISTERS: usize = 4;
+const RAM_MAIN_MEMORY_CHARS: usize = 16;
+const RAM_STATUS_CHARS: usize = 4;
+const NUMBER_OF_REGISTERS: usize = 4;
+const ROM_SIZE: usize = 256;
+const MAX_RAM: usize = 512;
 
-pub struct Memory {
-    pub rom: [u8; MAX_ROM],
-    pub ram: [u8; MAX_RAM]
+
+
+
+pub struct Register {
+    main_memory: [u8; RAM_MAIN_MEMORY_CHARS],
+    status_memory: [u8; RAM_STATUS_CHARS]
 }
 
-impl Memory {
-    pub fn new() -> Memory {
-        Memory {
-            rom:[0;MAX_ROM],
-            ram:[0;MAX_RAM]
+impl Register {
+
+}
+
+
+pub struct RAM {
+    register: Register,
+    output: u8
+}
+
+impl RAM {
+
+}
+
+pub struct ROM {
+    data: [u8; ROM_SIZE],
+    io: u8
+}
+
+impl ROM {
+    pub fn new() -> ROM {
+        ROM {
+            data: [0; ROM_SIZE],
+            io: 0 
         }
     }
 
-    pub fn load_byte_rom(&mut self, adress: usize, value: u8){
-        self.rom[adress] = value
+
+    pub fn rom_read_word(&self, adress: usize) -> u8 {
+        if adress > 255 {
+            panic!("ERROR: Adress is out of range!") 
+        }
+        self.data[adress]
     }
-
-    pub fn get_byte_rom(&self, adress: usize) -> u8 {
-        self.rom[adress]
-    }
-
-    pub fn load_byte_ram(&mut self, adress: usize, value:u8) {
-        self.ram[adress] = value
-    }
-
-    pub fn get_byte_ram(&self, adress: usize) -> u8 {
-        self.ram[adress]
-     }
-
 }
+
+impl Default for ROM {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+
+pub struct Memory {
+    pub ram: RAM,
+    pub rom: ()
+}
+
+
+
+// impl Memory {
+//     pub fn new() -> Memory {
+//         Memory {
+            
+//         }
+//     }
+
+
+
+// }
