@@ -1,4 +1,6 @@
 use crate::memory;
+use crate::ram;
+
 const MAX_INDEX_REGISTERS: usize = 16; 
 
 pub struct CPU { 
@@ -22,6 +24,11 @@ impl CPU {
 
         }
     }
+    
+        pub fn push (&mut self, d:u16) {
+            self.stack[self.stack_p as usize] = d;
+            self.stack_p += 1;
+        }
 
     pub fn pop(&mut self) -> u16 {
         if self.stack_p == 0 as u8 {
@@ -32,14 +39,9 @@ impl CPU {
         self.stack[self.stack_p as usize]
     }
 
-    pub fn push (&mut self, d:u16) {
-        self.stack[self.stack_p as usize] = d;
-        self.stack_p += 1;
-    }
-
     pub fn execute(&mut self, mem: &mut memory::Memory)  {
         let instruct: (u8, u8) = self.fetch_opcode(mem);
-        let instr = self.decode(instruct);
+        let instr:() = self.decode(instruct);
     } 
 
     pub fn fetch_byte(&mut self, mem: &mut memory::Memory, adress: &usize) {
@@ -116,7 +118,12 @@ impl CPU {
 
 
     pub fn bbl_opr(&mut self, opa: u8) {
-        
+        self.pop();
+        self.a_r = opa;
+    }
+
+    pub fn src_opr(&mut self, opa: u8) {
+
     }
 
     pub fn jin_opr(&mut self, opa: u8) {
