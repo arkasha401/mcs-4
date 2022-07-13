@@ -22,12 +22,11 @@ impl Register {
     }
 }
 
- 
+
 pub struct RAM {
     registers: [Register; NUMBER_OF_REGISTERS],
     output: u8
 }
-
 
 impl RAM {
     pub fn new() -> RAM {
@@ -41,8 +40,6 @@ impl RAM {
             output: 0 
         }
     }
-
-
 
     pub fn read_main_char(&mut self,register: u8, character: u8,) -> u8 {
         self.registers[register as usize].main_memory[character as usize]
@@ -66,19 +63,17 @@ impl RAM {
 
 }
 
+
 pub struct ROM {
     data: [u8; ROM_SIZE],
     io: u8
 }
-
-
 
 impl Default for ROM {
     fn default() -> Self {
         Self::new(vec![0;255])
     }
 }
-
 
 impl ROM {
     pub fn new(rom: Vec<u8>) -> ROM {
@@ -111,10 +106,7 @@ impl ROM {
     pub fn rom_read_port(&self) -> u8 {
         self.io
     }
-
-
 }
-
 
 
 #[derive()]
@@ -131,16 +123,3 @@ impl Memory {
         }
     }
 }
-
-
-
-// impl Memory {
-//     pub fn new() -> Memory {
-//         Memory {
-            
-//         }
-//     }
-
-
-
-// }
