@@ -33,25 +33,46 @@ pub struct ROM {
 }
 
 impl ROM {
-    pub fn new() -> ROM {
-        ROM {
+    pub fn new(rom: Vec<u8>) -> ROM {
+        let mut setup_rom: ROM = ROM {
             data: [0; ROM_SIZE],
             io: 0 
-        }
+        };
+
+        (0..rom.len()).for_each(|x| {
+            if x > 255 {
+                panic!("ERROR! Index is out of range!")
+            }
+            setup_rom.data[x] = rom[x]
+        });
+
+        setup_rom
     }
-
-
+    
     pub fn rom_read_word(&self, adress: usize) -> u8 {
         if adress > 255 {
             panic!("ERROR: Adress is out of range!") 
         }
         self.data[adress]
     }
+
+    pub fn rom_write_port(&mut self, value: u8) -> () {
+        self.io = value
+    }
+
+    pub fn rom_read_port(&self) -> u8 {
+        self.io
+    }
+
+
 }
+
+
+
 
 impl Default for ROM {
     fn default() -> Self {
-        Self::new()
+        Self::new(vec![0;255])
     }
 }
 

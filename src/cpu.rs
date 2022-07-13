@@ -1,5 +1,4 @@
 use crate::memory;
-use crate::ram;
 
 const MAX_INDEX_REGISTERS: usize = 16; 
 
