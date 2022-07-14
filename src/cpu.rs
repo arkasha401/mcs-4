@@ -120,7 +120,7 @@ impl CPU {
         }
     }
 
-    pub fn fin_opr(&mut self, opa: u8, mem: &mut memory::Memory) { 
+    pub fn fin_opr(&mut self, opa: u8, mem: &mut memory::ROM) { 
         let (data1, data2) = self.fetch_opcode(mem);
         self.index_registers[opa as usize] = data1;
         self.index_registers[(opa + 1) as usize] = data2;
