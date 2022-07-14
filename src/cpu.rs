@@ -4,7 +4,9 @@ const MAX_INDEX_REGISTERS: usize = 16;
 
 pub struct CPU { 
     a_r: u8, //u4
-    c_r: u8, //u1 
+    c_r: u8, //u1
+    x2: u8,
+    x3: u8,
     pc: u16,
     stack: [u16;3],
     stack_p: u8, // u3
@@ -16,6 +18,8 @@ impl CPU {
         CPU {
             a_r: 0,
             c_r: 0,
+            x2: 0, 
+            x3: 0,
             pc: 0,
             stack: [0;3],
             stack_p: 0, // u3
@@ -40,13 +44,18 @@ impl CPU {
         self.stack[self.stack_p as usize]
     }
 
-    pub fn execute(&mut self, mem: &mut memory::Memory)  {
+    pub fn execute(&mut self, mem: &mut memory::ROM)  {
         let instruct: (u8, u8) = self.fetch_opcode(mem);
         let instr:() = self.decode(instruct);
     } 
-
-    pub fn fetch_byte(&mut self, mem: &mut memory::Memory, adress: &usize) {
-        let byte: u8 = mem.get_byte_ram(*adress);
+    // returning 4bit char
+    pub fn fetch_char(&mut self, mem: &mut memory::Memory) -> u8 {
+        let register_pointer = self.x2;
+        let char_pointer: u8 = self.x3;
+        if register_pointer > 3 {
+            panic!("ERROR! 4002 REGISTER IS OUT OF RANGE!")
+        }
+        mem.ram.read_main_char(register_pointer, char_pointer)
     }
 
     pub fn fetch_opcode(&mut self, mem: &mut memory::ROM) -> (u8, u8) {
@@ -141,3 +150,4 @@ impl CPU {
         self.a_r = opa
     }
 }
+
