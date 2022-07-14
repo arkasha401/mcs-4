@@ -23,11 +23,13 @@ impl CPU {
 
         }
     }
+
+
     
-        pub fn push (&mut self, d:u16) {
-            self.stack[self.stack_p as usize] = d;
-            self.stack_p += 1;
-        }
+    pub fn push (&mut self, d:u16) -> () {
+        self.stack[self.stack_p as usize] = d;
+        self.stack_p += 1;
+    }
 
     pub fn pop(&mut self) -> u16 {
         if self.stack_p == 0 as u8 {
@@ -47,9 +49,9 @@ impl CPU {
         let byte: u8 = mem.get_byte_ram(*adress);
     }
 
-    pub fn fetch_opcode(&mut self, mem: &mut memory::Memory) -> (u8, u8) {
-        let first_part: u8 = mem.get_byte_rom(self.pc as usize) << 4;
-        let second_part: u8 = mem.get_byte_rom(self.pc as usize);
+    pub fn fetch_opcode(&mut self, mem: &mut memory::ROM) -> (u8, u8) {
+        let first_part: u8 = mem.rom_get_word(self.pc as usize) << 4;
+        let second_part: u8 = mem.rom_get_word(self.pc as usize);
         (first_part, second_part)
         
     }

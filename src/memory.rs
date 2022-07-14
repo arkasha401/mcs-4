@@ -41,20 +41,20 @@ impl RAM {
         }
     }
 
-    pub fn read_main_char(&mut self,register: u8, character: u8,) -> u8 {
-        self.registers[register as usize].main_memory[character as usize]
+    pub fn read_main_char(&mut self,register: u8, char_pointer: u8,) -> u8 {
+        self.registers[register as usize].main_memory[char_pointer as usize]
     }
 
-    pub fn write_main_char(&mut self,register: u8, character: u8, value: u8) {
-        self.registers[register as usize].main_memory[character as usize] = value
+    pub fn write_main_char(&mut self,register: u8, char_pointer: u8, value: u8) {
+        self.registers[register as usize].main_memory[char_pointer as usize] = value
     }
 
-    pub fn read_status_char(&mut self, register: u8, character: u8) -> u8 {
-        self.registers[register as usize].status_memory[character as usize]
+    pub fn read_status_char(&mut self, register: u8, char_pointer: u8) -> u8 {
+        self.registers[register as usize].status_memory[char_pointer as usize]
     }
 
-    pub fn write_status_char(&mut self, register: u8, character: u8, value: u8) {
-        self.registers[register as usize].status_memory[character as usize] = value  
+    pub fn write_status_char(&mut self, register: u8, char_pointer: u8, value: u8) {
+        self.registers[register as usize].status_memory[char_pointer as usize] = value  
     }
 
     pub fn ram_write_output(&mut self, value: u8) {
@@ -92,7 +92,7 @@ impl ROM {
         setup_rom
     }
     
-    pub fn rom_read_word(&self, adress: usize) -> u8 {
+    pub fn rom_get_word(&self, adress: usize) -> u8 {
         if adress > 255 {
             panic!("ERROR: Adress is out of range!") 
         }
