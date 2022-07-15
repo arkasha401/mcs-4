@@ -153,5 +153,7 @@ impl CPU {
         self.pop();
         self.a_r = opa
     }
+
+    // 2 word instructions
 }
 
