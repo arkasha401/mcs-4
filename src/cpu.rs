@@ -73,7 +73,6 @@ impl CPU {
         
     }
 
-
     pub fn decode(&mut self, (opr, opa): (u8,u8)) {
             match opr { 
                 0 => (),
@@ -84,9 +83,7 @@ impl CPU {
             }
     }
 
-
     // 1 word instructions 
-
 
     pub fn opr_ldm(&mut self, opa:u8){ 
         self.a_r = opa;
@@ -109,7 +106,6 @@ impl CPU {
         }
         self.a_r += self.index_registers[opa as usize] + self.c_r & 0b1111 ;
         self.c_r = 0
-
     }
 
     pub fn opr_sub(&mut self, opa: u8) {
@@ -117,7 +113,6 @@ impl CPU {
             self.a_r = self.a_r + self.index_registers[opa as usize] + self.c_r;
             self.c_r = 0 
         }
-
         self.a_r = self.a_r + self.index_registers[opa as usize] + self.c_r;
         self.c_r = 1;
     }
