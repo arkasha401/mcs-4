@@ -21,7 +21,7 @@ impl Register {
         }
     }
 }
-
+#[derive(Copy, Clone)]
 
 pub struct RAM {
     registers: [Register; NUMBER_OF_REGISTERS],
@@ -63,7 +63,7 @@ impl RAM {
 
 }
 
-
+#[derive(Copy, Clone)]
 pub struct ROM {
     pub data: [u8; ROM_SIZE],
     io: u8
@@ -71,7 +71,7 @@ pub struct ROM {
 
 impl Default for ROM {
     fn default() -> Self {
-        Self::new(vec![0;255])
+        Self::new(vec![0, ROM_SIZE as u8])
     }
 }
 
@@ -109,7 +109,7 @@ impl ROM {
 }
 
 
-#[derive()]
+#[derive(Copy, Clone)]
 pub struct Memory {
     pub ram: RAM,
     pub rom: ROM

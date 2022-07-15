@@ -1,21 +1,22 @@
 use crate::memory;
-use std::iter::ExactSizeIterator;
+use memory::Memory; 
 
 const MAX_INDEX_REGISTERS: usize = 16; 
 
 pub struct CPU { 
-    pub a_r: u8, //u4
+    a_r: u8, //u4
     c_r: u8, //u1
     x2: u8,
     x3: u8,
     pc: u16,
     stack: [u16 ;3],
     stack_p: u8, // u3
-    index_registers: [u8; MAX_INDEX_REGISTERS]
+    index_registers: [u8; MAX_INDEX_REGISTERS],
+    memory: Memory
 }
 
 impl CPU {
-    pub fn new() -> CPU {
+    pub fn new(memory: Memory) -> CPU {
         CPU {
             a_r: 0,
             c_r: 0,
@@ -24,17 +25,18 @@ impl CPU {
             pc: 0,
             stack: [0;3],
             stack_p: 0, // u3
-            index_registers: [0;MAX_INDEX_REGISTERS]
-
+            index_registers: [0;MAX_INDEX_REGISTERS],
+            memory: memory
         }
     }
 
     pub fn run(&mut self, mem: &mut memory::ROM) {
-            
-        while mem.data[self.pc as usize] != 0 {
+        loop {
             self.execute(mem);
-            println!("{}", self.a_r);
-        }
+            if self.pc == 255 {
+                break;
+            }
+        } 
     }
     
     pub fn push (&mut self, d:u16) -> () {
@@ -53,7 +55,13 @@ impl CPU {
 
     pub fn execute(&mut self, mem: &mut memory::ROM)  {
         let instruction: (u8, u8) = self.fetch_opcode(mem);
-        let instr:() = self.decode(instruction);
+        self.decode(instruction);
+        
+        if self.pc == 255 {
+            println!("It's done!");
+        } else {
+        self.pc += 1;     
+        }
     } 
     // returning 4bit char
     pub fn fetch_char(&mut self, mem: &mut memory::Memory) -> u8 {
@@ -65,7 +73,7 @@ impl CPU {
         mem.ram.read_main_char(register_pointer, char_pointer)
     }
 
-    pub fn fetch_opcode(&mut self, mem: &mut memory::ROM) -> (u8, u8) {
+    pub fn fetch_opcode(&mut self, mem: &memory::ROM) -> (u8, u8) {
         let first_part: u8 = mem.rom_get_word(self.pc as usize) >> 4;
         let second_part: u8 = mem.rom_get_word(self.pc as usize) & 0b00001111;
         self.pc += 1 ;
@@ -75,31 +83,43 @@ impl CPU {
 
     pub fn decode(&mut self, (opr, opa): (u8,u8)) {
             match opr { 
-                0 => (),
-                10 => self.opr_ld(opa),
-                11 => self.opr_xch(opa),
-                13 => self.opr_ldm(opa),
-                _ => ()
+                0 => self.opr_nop(),
+                2 => self.src_opr(opa),
+                4 => self.fin_opr(opa, self.memory.rom),
+                3 => self.jin_opr(opa),
+                6 => self.inc_opr(opa),
+                8 => self.add_opr(opa),
+                9 => self.sub_opr(opa),
+                10 => self.ld_opr(opa),
+                11 => self.xch_opr(opa),
+                12 => self.bbl_opr(opa),
+                13 => self.ldm_opr(opa),
+
+                _ => panic!("NO FOLLOW INSTRUCTIONS")
             }
+    }
+
+    pub fn opr_nop(&self) -> () {
+        println!("NOP")
     }
 
     // 1 word instructions 
 
-    pub fn opr_ldm(&mut self, opa:u8){ 
+    pub fn ldm_opr(&mut self, opa:u8){ 
         self.a_r = opa;
     }
 
-    pub fn opr_ld(&mut self, opa: u8) {
+    pub fn ld_opr(&mut self, opa: u8) {
         self.a_r = self.index_registers[opa as usize]
     }
 
-    pub fn opr_xch(&mut self, opa: u8) {
+    pub fn xch_opr(&mut self, opa: u8) {
         let temp: u8 = self.a_r;
         self.a_r = self.index_registers[opa as usize];
         self.index_registers[opa as usize] = temp
     }
 
-    pub fn opr_add(&mut self, opa: u8){
+    pub fn add_opr(&mut self, opa: u8){
         if self.a_r + self.index_registers[opa as usize] + self.c_r > 15 {
             self.a_r = self.a_r & 0b1111;
             self.c_r = 1
@@ -108,7 +128,7 @@ impl CPU {
         self.c_r = 0
     }
 
-    pub fn opr_sub(&mut self, opa: u8) {
+    pub fn sub_opr(&mut self, opa: u8) {
         if self.c_r == 1 {
             self.a_r = self.a_r + self.index_registers[opa as usize] + self.c_r;
             self.c_r = 0 
@@ -124,8 +144,8 @@ impl CPU {
         }
     }
 
-    pub fn fin_opr(&mut self, opa: u8, mem: &mut memory::ROM) { 
-        let (data1, data2) = self.fetch_opcode(mem);
+    pub fn fin_opr(&mut self, opa: u8, mem: memory::ROM) { 
+        let (data1, data2) = self.fetch_opcode(&mem);
         self.index_registers[opa as usize] = data1;
         self.index_registers[(opa + 1) as usize] = data2;
     } 
@@ -137,16 +157,17 @@ impl CPU {
     }
 
     pub fn src_opr(&mut self, opa: u8) {
+        self.x2 = self.index_registers[opa as usize & 0b1110];
+        self.x3 = self.index_registers[opa as usize & 0b1111];
 
     }
 
     pub fn jin_opr(&mut self, opa: u8) {
-        if self.pc == 0b000011111111 {
-            self.pc += 1 << 8
-        }
-        let (d1, d2) = (self.index_registers[opa as usize], self.index_registers[opa as usize + 1]);
-        self.pc = d1 as u16;
-        self.pc += (d2 as u16) << 4;
+        let ph: u16 = self.pc >> 8;
+        let pm: u8 = self.index_registers[(opa as usize) & 0b1110];
+        let pl: u8 = self.index_registers[(opa as usize) & 0b1111];
+        self.pc = ph << 8 + (pm as u16) << 4 + pl as u16 
+
     }
     
     pub fn jun_opr(&mut self, opa: u8) {
@@ -154,6 +175,6 @@ impl CPU {
         self.a_r = opa
     }
 
-    // 2 word instructions
+        // 2 word instructions
 }
 
