@@ -1,14 +1,15 @@
 use crate::memory;
+use std::iter::ExactSizeIterator;
 
 const MAX_INDEX_REGISTERS: usize = 16; 
 
 pub struct CPU { 
-    a_r: u8, //u4
+    pub a_r: u8, //u4
     c_r: u8, //u1
     x2: u8,
     x3: u8,
     pc: u16,
-    stack: [u16;3],
+    stack: [u16 ;3],
     stack_p: u8, // u3
     index_registers: [u8; MAX_INDEX_REGISTERS]
 }
@@ -28,7 +29,13 @@ impl CPU {
         }
     }
 
-
+    pub fn run(&mut self, mem: &mut memory::ROM) {
+            
+        while mem.data[self.pc as usize] != 0 {
+            self.execute(mem);
+            println!("{}", self.a_r);
+        }
+    }
     
     pub fn push (&mut self, d:u16) -> () {
         self.stack[self.stack_p as usize] = d;
@@ -45,8 +52,8 @@ impl CPU {
     }
 
     pub fn execute(&mut self, mem: &mut memory::ROM)  {
-        let instruct: (u8, u8) = self.fetch_opcode(mem);
-        let instr:() = self.decode(instruct);
+        let instruction: (u8, u8) = self.fetch_opcode(mem);
+        let instr:() = self.decode(instruction);
     } 
     // returning 4bit char
     pub fn fetch_char(&mut self, mem: &mut memory::Memory) -> u8 {
@@ -59,11 +66,13 @@ impl CPU {
     }
 
     pub fn fetch_opcode(&mut self, mem: &mut memory::ROM) -> (u8, u8) {
-        let first_part: u8 = mem.rom_get_word(self.pc as usize) << 4;
-        let second_part: u8 = mem.rom_get_word(self.pc as usize);
+        let first_part: u8 = mem.rom_get_word(self.pc as usize) >> 4;
+        let second_part: u8 = mem.rom_get_word(self.pc as usize) & 0b00001111;
+        self.pc += 1 ;
         (first_part, second_part)
         
     }
+
 
     pub fn decode(&mut self, (opr, opa): (u8,u8)) {
             match opr { 

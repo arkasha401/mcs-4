@@ -65,7 +65,7 @@ impl RAM {
 
 
 pub struct ROM {
-    data: [u8; ROM_SIZE],
+    pub data: [u8; ROM_SIZE],
     io: u8
 }
 
@@ -99,12 +99,12 @@ impl ROM {
         self.data[adress]
     }
 
-    pub fn rom_write_port(&mut self, value: u8) -> () {
-        self.io = value
-    }
-
     pub fn rom_read_port(&self) -> u8 {
         self.io
+    }
+
+    pub fn rom_write_port(&mut self, value: u8) -> () {
+        self.io = value
     }
 }
 
