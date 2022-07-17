@@ -25,7 +25,7 @@ impl Register {
 
 pub struct RAM {
     registers: [Register; NUMBER_OF_REGISTERS],
-    output: u8
+    pub output: u8
 }
 
 impl RAM {
@@ -41,7 +41,7 @@ impl RAM {
         }
     }
 
-    pub fn read_main_char(&mut self,register: u8, char_pointer: u8,) -> u8 {
+    pub fn read_main_char(&self,register: u8, char_pointer: u8,) -> u8 {
         self.registers[register as usize].main_memory[char_pointer as usize]
     }
 
@@ -49,12 +49,12 @@ impl RAM {
         self.registers[register as usize].main_memory[char_pointer as usize] = value
     }
 
-    pub fn read_status_char(&mut self, register: u8, char_pointer: u8) -> u8 {
-        self.registers[register as usize].status_memory[char_pointer as usize]
+    pub fn read_status_char(&mut self, register: u8, status_pointer: u8) -> u8 {
+        self.registers[register as usize].status_memory[status_pointer as usize]
     }
 
-    pub fn write_status_char(&mut self, register: u8, char_pointer: u8, value: u8) {
-        self.registers[register as usize].status_memory[char_pointer as usize] = value  
+    pub fn write_status_char(&mut self, register: u8, status_pointer: u8, value: u8) {
+        self.registers[register as usize].status_memory[status_pointer as usize] = value  
     }
 
     pub fn ram_write_output(&mut self, value: u8) {
