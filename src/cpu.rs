@@ -1,3 +1,5 @@
+use core::panic;
+
 use crate::memory;
 use crate::memory::Memory; 
 
@@ -87,7 +89,8 @@ impl CPU {
                 1 => self.jcn_opr(opa),
                 2 => match opa {
                     0 => self.fim_opr(opa),
-                    1 => self.src_opr(opa)
+                    1 => self.src_opr(opa),
+                    _ => panic!("ERROR: NO INSTRUCTION EXISTS")
                 }, 
                 3 => match opa {
                     0 => self.fin_opr(opa),
@@ -138,7 +141,7 @@ impl CPU {
                     10 => self.stc_opr(),
                     11 => self.daa_opr(),
                     12 => self.kbp_opr(),
-                    13 => self.dcl_opr(),
+                    // 13 => self.dcl_opr(),
                     _ => panic!("ERROR! NO EXISTING INSTRUCTION")
                 },
 
@@ -276,7 +279,7 @@ impl CPU {
         self.ram_write_char(self.a_r)
     }
 
-    pub fn rdr_opr(&self) {
+    pub fn rdr_opr(&mut self) {
         self.a_r = self.rom_read_port()
     }
 
@@ -437,7 +440,7 @@ impl CPU {
         }
     }
 
-    pub fn fim_opr(mut self, opa: u8) {
+    pub fn fim_opr(&mut self, opa: u8) {
         let (d1, d2) = self.fetch_opcode();
         self.index_registers[opa as usize & 0b1110] = d1;
         self.index_registers[opa as usize & 0b1111] = d1;
