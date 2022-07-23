@@ -338,26 +338,34 @@ impl CPU {
 
     pub fn iac_opr(&mut self) {
         self.a_r += 1;
-        self.c_r = self.a_r >> 4;
-        self.a_r &= 0b1111;
+        if self.a_r <= 15 {
+            self.c_r = 0
+        }
     }
 
     pub fn dac_opr(&mut self) {
         self.a_r = self.a_r + 0b1111;
-        self.c_r = self.a_r >> 4;
-        self.a_r = self.a_r & 0b1111;   
+        if self.a_r > 15 {
+            self.c_r = 1;
+            self.a_r &= 0b1111
+        }
+        self.c_r = 0    
     }
 
     pub fn ral_opr(&mut self) {
         self.a_r = (self.a_r << 4) + self.c_r;
-        self.c_r = self.a_r >> 4;
+        if self.a_r > 15 {
+            self.c_r = 1;
+            self.a_r &= 0b1111
+        }
+        self.c_r = 0;
         self.a_r = self.a_r & 0b1111;
 
     }
 
     pub fn rar_opr(&mut self) {
-        self.a_r = self.a_r >> 1 + self.c_r << 3;
-        self.c_r = self.a_r >> 4; 
+        self.c_r = self.a_r >> 3;
+        self.a_r = self.a_r >> 1 + self.c_r << 3; 
     } 
 
     pub fn tcc_opr(&mut self) {
@@ -393,9 +401,9 @@ impl CPU {
         }
     }
     
-    pub fn dcl_opr(&mut self) {
-        self.ram_bank_switching = self.a_r & 0b111
-    }
+    // pub fn dcl_opr(&mut self) {
+    //     self.ram_bank = self.a_r & 0b111
+    // }
 
     // 2 words instructions
 
