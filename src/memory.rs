@@ -1,9 +1,7 @@
-const RAM_NUM_OF_REGISTERS: usize = 4;
 const RAM_MAIN_MEMORY_CHARS: usize = 16;
 const RAM_STATUS_CHARS: usize = 4;
 const NUMBER_OF_REGISTERS: usize = 4;
 const ROM_SIZE: usize = 256;
-const MAX_RAM: usize = 512;
 
 
 
@@ -11,15 +9,6 @@ const MAX_RAM: usize = 512;
 pub struct Register {
     main_memory: [u8; RAM_MAIN_MEMORY_CHARS],
     status_memory: [u8; RAM_STATUS_CHARS]
-}
-
-impl Register {
-    pub fn new() -> Register {
-        Register {
-            main_memory: [0; RAM_MAIN_MEMORY_CHARS],
-            status_memory: [0; RAM_STATUS_CHARS] 
-        }
-    }
 }
 #[derive(Copy, Clone)]
 

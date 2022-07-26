@@ -1,6 +1,4 @@
 use core::panic;
-
-use crate::memory;
 use crate::memory::Memory; 
 
 const MAX_INDEX_REGISTERS: usize = 16; 
@@ -65,15 +63,6 @@ impl CPU {
         self.pc += 1;     
         }
     } 
-    // returning 4bit char
-    pub fn fetch_char(&mut self) -> u8 {
-        let register_pointer = self.x2;
-        let char_pointer: u8 = self.x3;
-        if register_pointer > 3 {
-            panic!("ERROR! 4002 REGISTER IS OUT OF RANGE!")
-        }
-        self.memory.ram.read_main_char(register_pointer, char_pointer)
-    }
 
     pub fn fetch_opcode(&mut self) -> (u8, u8) {
         let first_part: u8 = self.memory.rom.rom_get_word(self.pc as usize) >> 4;
@@ -110,12 +99,12 @@ impl CPU {
                 14 => match opa {
                     0 => self.wrm_opr(),
                     1 => self.wmp_opr(),
-                    2 => self.wrm_opr(),
+                    2 => self.wrr_opr(),
                     3 => (),
-                    4 => self.wr0(),
-                    5 => self.wr1(),
-                    6 => self.wr2(),
-                    7 => self.wr3(),
+                    4 => self.wr0_opr(),
+                    5 => self.wr1_opr(),
+                    6 => self.wr2_opr(),
+                    7 => self.wr3_opr(),
                     8 => self.sbm_opr(),
                     9 => self.rdm_opr(),
                     10 => self.rdr_opr(),
@@ -172,7 +161,7 @@ impl CPU {
     }
     
     pub fn ram_write_output(&mut self) {
-        self.memory.ram.output = self.a_r
+        self.memory.ram.ram_write_output(self.a_r)
     } 
 
     pub fn rom_read_port(&self) -> u8 {
@@ -283,23 +272,24 @@ impl CPU {
         self.a_r = self.rom_read_port()
     }
 
-    pub fn wr0(&mut self) {
+    pub fn wr0_opr(&mut self) {
         self.ram_write_status(0, self.a_r)
     }
 
-    pub fn wr1(&mut self) {
+    pub fn wr1_opr(&mut self) {
         self.ram_write_status(1, self.a_r)
     }
 
-    pub fn wr2(&mut self) {
+    pub fn wr2_opr(&mut self) {
         self.ram_write_status(2, self.a_r)
     }
 
-    pub fn wr3(&mut self) {
+    pub fn wr3_opr
+    (&mut self) {
         self.ram_write_status(3, self.a_r)
     }
 
-    pub fn wrr(&mut self) {
+    pub fn wrr_opr(&mut self) {
         self.rom_write_port()
     }
 
@@ -443,7 +433,7 @@ impl CPU {
     pub fn fim_opr(&mut self, opa: u8) {
         let (d1, d2) = self.fetch_opcode();
         self.index_registers[opa as usize & 0b1110] = d1;
-        self.index_registers[opa as usize & 0b1111] = d1;
+        self.index_registers[opa as usize & 0b1111] = d2;
     }
 
 }

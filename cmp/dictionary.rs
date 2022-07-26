@@ -56,3 +56,9 @@ impl Instructions {
         Instructions
     } 
 }
+
+impl Default for Instructions {
+    fn default() -> Self {
+        Self::new()
+    }
+}
