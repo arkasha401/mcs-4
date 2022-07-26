@@ -1,12 +1,12 @@
 use std::collections::HashMap;
 
 
-pub struct Instructions {
-    opcodes: HashMap<&str, u8>
+pub struct Instructions <'a> {
+    opcodes: HashMap<&'a str, u8>
 }
 
-impl Instructions {
-    pub fn new() -> Instructions {
+impl Instructions <'_> {
+    pub fn new() -> Instructions<'static> {
         let mut opcodes = HashMap::<&str, u8>::new();
         opcodes.insert("JCN", 0x1);
         opcodes.insert("FIM", 0x2);
@@ -53,11 +53,11 @@ impl Instructions {
         opcodes.insert("DAA", 0xF);
         opcodes.insert("KBP", 0xF);
         opcodes.insert("DCL", 0xF);
-        Instructions
+        Instructions {opcodes}
     } 
 }
 
-impl Default for Instructions {
+impl Default for Instructions<'static> {
     fn default() -> Self {
         Self::new()
     }

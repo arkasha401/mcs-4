@@ -1,5 +1,7 @@
 mod memory;
 mod cpu;
+mod cmp;
+
 use cpu::CPU;
 
 
@@ -8,5 +10,6 @@ pub fn main() {
     let mems = memory::Memory::new(vector_of_instructions);
     let mut cpu = CPU::new(mems);
     cpu.run();
-    println!("{:?}", mems.rom.data) 
+    println!("{:?}", mems.rom.data);
+    let asm = cmp::assembler::Assembler::new();
 }
