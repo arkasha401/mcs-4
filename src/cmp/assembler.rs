@@ -7,11 +7,15 @@ pub struct Assembler {
 } 
 
 impl Assembler {
-    pub fn new() -> Assembler {
+    pub fn new(data: Vec<String>) -> Assembler {
         Assembler {
-            data: vec!["a".to_string(), "v".to_string()],
+            data,
             binary: Vec::new()
         }
     }
+    pub fn assembly(&mut self) {
+        
+    }
 }
+
 
