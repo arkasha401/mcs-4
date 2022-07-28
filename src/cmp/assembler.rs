@@ -1,6 +1,7 @@
 use crate::cmp::dictionary;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
+use std::env;
 
 
 pub struct Assembler {
@@ -9,25 +10,26 @@ pub struct Assembler {
 } 
 
 impl Assembler {
-    pub fn new(data: Vec<String>) -> Assembler {
+    pub fn new() -> Assembler {
+        let name = env::args().nth(1).unwrap();
+        let f = File::open(name).unwrap();
+        let mut reader = BufReader::new(f);
+        for (index, line) in reader.lines().enumerate() {
+            for i in line.unwrap().split_whitespace() {
+                println!("{}", i.trim())
+            }
+
+        } 
+
         Assembler {
-            data,
+            data: Vec::new(),
             binary: Vec::new()
         }
     }
 
-    pub fn read_file(filepath: &str){
-        let r_file = File::open(filepath).unwrap();  
-        let reader = BufReader::new(r_file);
-
-        for (index, line) in reader.lines().enumerate(){
-            
-
-        } 
-    }  
-    pub fn assembly(&mut self) {
-        
-    }
+    
 }
+
+
 
 
