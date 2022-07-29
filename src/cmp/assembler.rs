@@ -5,31 +5,42 @@ use std::env;
 
 
 
-pub struct Assembler {
+pub struct Assembler <'a>{
     data: Vec<String>, 
     binary: Vec<u8>, 
+    Dictionary: dictionary::Instructions <'a> 
 }
 
-impl Assembler {
-    pub fn new() -> Assembler {
+impl Assembler <'static> {
+    pub fn new() -> Assembler <'static> {
         let name = env::args().nth(1).unwrap();
         let f = File::open(name).unwrap();
         let mut temp_vec: Vec<String> = Vec::new();
         let reader = BufReader::new(f);
-        for (_index,mut line) in reader.lines().enumerate() {
+        for (_index,line) in reader.lines().enumerate() {
             let line = line.unwrap();
             if line.contains(";")  {
-                if *line.clone().as_bytes().last().unwrap() == (';' as u8) {
-                    println!(";");
-                }
-            } else {
-            panic!("SYNTAX ERROR: ';' MISSED")
+                if *line.as_bytes().last().unwrap() == (';' as u8) {
+                    temp_vec.push(line.replace(';', "").trim().to_string());
+                    println!("{:?}", temp_vec);
+                }    
+            } else if !line.contains(";"){
+                panic!("SYNTAX ERROR: ';' MISSED")
             }
+
+
         }
-        Assembler {
+        Assembler  {
             data: Vec::new(),
-            binary: Vec::new()
+            binary: Vec::new(),
+            Dictionary: dictionary::Instructions::new() 
         }
+    }
+}
+
+impl Default for Assembler <'static> {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
