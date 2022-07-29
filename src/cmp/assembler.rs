@@ -17,11 +17,14 @@ impl Assembler {
         let mut temp_vec: Vec<String> = Vec::new();
         let reader = BufReader::new(f);
         for (_index,mut line) in reader.lines().enumerate() {
-            if line.unwrap().contains(";")  {
-                if line.unwrap().clone().as_bytes().last().unwrap() == ";".as_u8() {
+            let line = line.unwrap();
+            if line.contains(";")  {
+                if *line.clone().as_bytes().last().unwrap() == (';' as u8) {
+                    println!(";");
                 }
-            } 
-            panic!("ERROR: SYNTAX ERROR MIGHT BE MISSED: ;")
+            } else {
+            panic!("SYNTAX ERROR: ';' MISSED")
+            }
         }
         Assembler {
             data: Vec::new(),
