@@ -72,7 +72,7 @@ impl ROM {
         };
 
         (0..rom.len()).for_each(|x| {
-            if x > 255 {
+            if x > 2047 {
                 panic!("ERROR! Index is out of range!")
             }
             setup_rom.data[x] = rom[x]
@@ -82,7 +82,7 @@ impl ROM {
     }
     
     pub fn rom_get_word(&self, adress: usize) -> u8 {
-        if adress > 255 {
+        if adress > 2047 {
             panic!("ERROR: Adress is out of range!") 
         }
         self.data[adress]

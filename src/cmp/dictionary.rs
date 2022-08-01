@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 
 pub struct Instructions <'a> {
-    opcodes: HashMap<&'a str, u8>
+    pub opcodes: HashMap<&'a str, u8>
 }
 
 impl Instructions <'_> {

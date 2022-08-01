@@ -56,6 +56,15 @@ impl Assembler <'static> {
             Dictionary: dictionary::Instructions::new() 
         }
     }
+
+
+    pub fn assembly(&mut self) {
+        let mut ptr: u16 = 0;
+        for ptr in 0..self.data.len() {
+            // if ///
+
+        }
+    }
 }
 
 impl Default for Assembler <'static> {
