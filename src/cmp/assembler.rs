@@ -61,7 +61,7 @@ impl Assembler <'static> {
     pub fn assembly(&mut self) {
         let mut ptr: u16 = 0;
         for ptr in 0..self.data.len() {
-            // if ///
+            
 
         }
     }

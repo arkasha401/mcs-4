@@ -2,7 +2,8 @@ use std::collections::HashMap;
 
 
 pub struct Instructions <'a> {
-    pub opcodes: HashMap<&'a str, u8>
+    pub opcodes: HashMap<&'a str, u8>,
+    pub opcode_length: [Vec<String>; 2]
 }
 
 impl Instructions <'_> {
@@ -36,10 +37,7 @@ impl Instructions <'_> {
         opcodes.insert("RDR", 0xE);
         opcodes.insert("ADM", 0xE);
         opcodes.insert("RD0", 0xE);
-        opcodes.insert("RD1", 0xE);
-        opcodes.insert("RD2", 0xE);
-        opcodes.insert("RD3", 0xE);
-        opcodes.insert("CLB", 0xF);
+        opcodes.insert("RD1", 0xF);
         opcodes.insert("CLC", 0xF);
         opcodes.insert("IAC", 0xF);
         opcodes.insert("CMC", 0xF);
@@ -53,8 +51,20 @@ impl Instructions <'_> {
         opcodes.insert("DAA", 0xF);
         opcodes.insert("KBP", 0xF);
         opcodes.insert("DCL", 0xF);
-        Instructions {opcodes}
-    } 
+
+
+
+        Instructions {opcodes, opcode_length: Instructions::operands_opcode() }
+    }
+
+    fn operands_opcode() -> [Vec<String>; 2] {
+        // let with_one_operand: Vec<String> = ;
+        // let without_operands: Vec<String> = vec[1] ;
+        // let with_two_opr: Vec<String> = ; 
+
+    }
+    
+    
 }
 
 impl Default for Instructions<'static> {
