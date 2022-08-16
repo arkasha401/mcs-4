@@ -32,9 +32,24 @@ impl Assembler<'static> {
 
     pub fn compile(&mut self, file_name: String) {
         self.asm_code = Assembler::read_file(file_name);
+        // for (c, asm_str) in self.asm_code.iter().enumerate() {
+        //println!("{:>0wid$X}\t{}", c, asm_str, wid = 2);
+        //}
+        //
+        self.from_tab_to_space();
+        self.delete_spaces();
+    }
 
-        for (c, asm_str) in self.asm_code.iter().enumerate() {
-            println!("{:>0wid$X}\t{}", c, asm_str, wid = 2);
+    pub fn from_tab_to_space(&mut self) {
+        for index in 0..self.asm_code.len() {
+            self.asm_code[index] = self.asm_code[index].replace("/t", "    ");
+        }
+    }
+
+    pub fn delete_spaces(&mut self) {
+        for index in 0..self.asm_code.len() {
+            self.asm_code[index] = self.asm_code[index].replace(" ", "");
+            println!("{}", self.asm_code[index])
         }
     }
 }
