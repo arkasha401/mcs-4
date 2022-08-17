@@ -15,5 +15,3 @@ pub fn main() {
 
     c.compile(filename);
 }
-
-nvim

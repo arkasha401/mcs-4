@@ -1,5 +1,4 @@
 use crate::cmp::dictionary;
-use core::panic;
 use std::env;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
@@ -36,8 +35,11 @@ impl Assembler<'static> {
         //println!("{:>0wid$X}\t{}", c, asm_str, wid = 2);
         //}
         //
+        //
+        println!("{:?}", self.asm_code);
         self.from_tab_to_space();
         self.delete_spaces();
+        self.reading_labels();
     }
 
     pub fn from_tab_to_space(&mut self) {
@@ -49,7 +51,14 @@ impl Assembler<'static> {
     pub fn delete_spaces(&mut self) {
         for index in 0..self.asm_code.len() {
             self.asm_code[index] = self.asm_code[index].replace(" ", "");
-            println!("{}", self.asm_code[index])
+        }
+    }
+
+    pub fn reading_labels(&mut self) {
+        for index in 0..self.asm_code.len() {
+            if self.asm_code[index].ends_with(':') {
+                ()
+            }
         }
     }
 }
