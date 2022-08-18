@@ -51,11 +51,15 @@ impl Instructions<'_> {
         opcodes.insert("KBP", 0xF);
         opcodes.insert("DCL", 0xF);
 
-        let one_word = vec!["RDM"];
-
-        let two_words = vec!["LDM"];
-
-        let three_words = vec!["ISZ"];
+        let one_word = vec![
+            "RDM", "RD0", "RD1", "RD2", "RD3", "RDR", "WRM", "WR0", "WR1", "WR2", "WR3", "WRR",
+            "WMP", "ADM", "SBM", "CLB", "CLC", "CMC", "STC", "CMA", "IAC", "DAC", "RAL", "RAR",
+            "TCC", "DAA", "TCS", "KBP",
+        ];
+        let two_words = vec![
+            "LDM", "LD", "XCH", "ADD", "SUB", "INC", "BBL", "JIN", "SRC", "FIN",
+        ];
+        let three_words = vec!["JUN", "JMS", "JCN", "ISZ", "FIM"];
 
         let opcodes_lenght: [Vec<&str>; 3] = [one_word, two_words, three_words];
         Instructions {

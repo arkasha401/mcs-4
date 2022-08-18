@@ -8,7 +8,7 @@ pub struct Assembler<'a> {
     asm_code: Vec<String>,
     program_counter: usize,
     binary: Vec<u8>,
-    Dictionary: dictionary::Instructions<'a>,
+    dictionary: dictionary::Instructions<'a>,
     labels_dict: HashMap<String, usize>,
 }
 
@@ -18,7 +18,7 @@ impl Assembler<'static> {
             asm_code: Vec::new(),
             program_counter: 0,
             binary: Vec::new(),
-            Dictionary: dictionary::Instructions::new(),
+            dictionary: dictionary::Instructions::new(),
             labels_dict: HashMap::new(),
         }
     }
@@ -41,7 +41,6 @@ impl Assembler<'static> {
         //}
         //
         //
-        println!("{:?}", self.asm_code);
 
         while self.program_counter < self.asm_code.len() {
             let mut current_line = self.asm_code[self.program_counter].clone();
@@ -56,12 +55,26 @@ impl Assembler<'static> {
                 .map(|s| s.to_string())
                 .collect();
 
-            //println!("{:?}", tokens);
+            println!("{:?}", tokens);
             if tokens[0].ends_with(':') {
                 self.labels_dict
                     .insert(tokens[0].clone(), self.program_counter);
             }
-            println!("{:?}", self.labels_dict);
+
+            if self.dictionary.opcodes_lenght[0].contains(&&tokens[0][..]) {
+                if tokens.len() > 1 {
+                    panic!("ERROR: TOO MANY OPERANDS")
+                }
+            } else if self.dictionary.opcodes_lenght[1].contains(&&tokens[0][..]) {
+                ()
+            } else if self.dictionary.opcodes_lenght[2].contains(&&tokens[0][..]) {
+                ()
+            } else {
+                panic!(
+                    "LINE: {} ERROR: THIS INSTRUCTION DOESN'T EXIST.",
+                    self.program_counter
+                )
+            }
         }
     }
 }
