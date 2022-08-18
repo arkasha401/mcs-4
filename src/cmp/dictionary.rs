@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 pub struct Instructions<'a> {
     pub opcodes: HashMap<&'a str, u8>,
+    pub opcodes_lenght: [Vec<&'a str>; 3],
 }
 
 impl Instructions<'_> {
@@ -50,7 +51,17 @@ impl Instructions<'_> {
         opcodes.insert("KBP", 0xF);
         opcodes.insert("DCL", 0xF);
 
-        Instructions { opcodes }
+        let one_word = vec!["RDM"];
+
+        let two_words = vec!["LDM"];
+
+        let three_words = vec!["ISZ"];
+
+        let opcodes_lenght: [Vec<&str>; 3] = [one_word, two_words, three_words];
+        Instructions {
+            opcodes,
+            opcodes_lenght,
+        }
     }
 }
 // let with_one_operand: Vec<String> = ;

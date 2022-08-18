@@ -1,20 +1,25 @@
 use crate::cmp::dictionary;
+use std::collections::HashMap;
 use std::env;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
 pub struct Assembler<'a> {
     asm_code: Vec<String>,
+    program_counter: usize,
     binary: Vec<u8>,
     Dictionary: dictionary::Instructions<'a>,
+    labels_dict: HashMap<String, usize>,
 }
 
 impl Assembler<'static> {
     pub fn new() -> Assembler<'static> {
         Assembler {
             asm_code: Vec::new(),
+            program_counter: 0,
             binary: Vec::new(),
             Dictionary: dictionary::Instructions::new(),
+            labels_dict: HashMap::new(),
         }
     }
 
@@ -37,28 +42,26 @@ impl Assembler<'static> {
         //
         //
         println!("{:?}", self.asm_code);
-        self.from_tab_to_space();
-        self.delete_spaces();
-        self.reading_labels();
-    }
 
-    pub fn from_tab_to_space(&mut self) {
-        for index in 0..self.asm_code.len() {
-            self.asm_code[index] = self.asm_code[index].replace("/t", "    ");
-        }
-    }
-
-    pub fn delete_spaces(&mut self) {
-        for index in 0..self.asm_code.len() {
-            self.asm_code[index] = self.asm_code[index].replace(" ", "");
-        }
-    }
-
-    pub fn reading_labels(&mut self) {
-        for index in 0..self.asm_code.len() {
-            if self.asm_code[index].ends_with(':') {
-                ()
+        while self.program_counter < self.asm_code.len() {
+            let mut current_line = self.asm_code[self.program_counter].clone();
+            self.program_counter += 1;
+            if current_line.is_empty() {
+                continue;
             }
+
+            current_line.replace("\t", "    ");
+            let mut tokens: Vec<String> = current_line
+                .split_whitespace()
+                .map(|s| s.to_string())
+                .collect();
+
+            //println!("{:?}", tokens);
+            if tokens[0].ends_with(':') {
+                self.labels_dict
+                    .insert(tokens[0].clone(), self.program_counter);
+            }
+            println!("{:?}", self.labels_dict);
         }
     }
 }

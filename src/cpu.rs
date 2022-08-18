@@ -1,20 +1,17 @@
+use crate::memory::Memory;
 use core::panic;
-use crate::memory::Memory; 
 
-
-
-const MAX_INDEX_REGISTERS: usize = 16; 
-
-pub struct CPU { 
+const MAX_INDEX_REGISTERS: usize = 16;
+pub struct CPU {
     a_r: u8, //u4
     c_r: u8, //u1
     x2: u8,
     x3: u8,
     pc: u16,
-    stack: [u16 ;3],
+    stack: [u16; 3],
     stack_p: u8, // u3
     index_registers: [u8; MAX_INDEX_REGISTERS],
-    memory: Memory
+    memory: Memory,
 }
 
 impl CPU {
@@ -22,13 +19,13 @@ impl CPU {
         CPU {
             a_r: 0,
             c_r: 0,
-            x2: 0, 
+            x2: 0,
             x3: 0,
             pc: 0,
-            stack: [0;3],
+            stack: [0; 3],
             stack_p: 0, // u3
-            index_registers: [0;MAX_INDEX_REGISTERS],
-            memory: memory
+            index_registers: [0; MAX_INDEX_REGISTERS],
+            memory: memory,
         }
     }
     #[warn(unconditional_recursion)]
@@ -38,10 +35,10 @@ impl CPU {
             if self.pc == 255 {
                 break;
             }
-        } 
+        }
     }
-    
-    pub fn stack_push (&mut self, d:u16) -> () {
+
+    pub fn stack_push(&mut self, d: u16) -> () {
         self.stack[self.stack_p as usize] = d;
         self.stack_p += 1;
     }
@@ -50,94 +47,92 @@ impl CPU {
         if self.stack_p == 0 as u8 {
             panic!("ERROR: Trying to pop nothing");
         }
-        
+
         self.stack_p -= 1;
         self.stack[self.stack_p as usize]
     }
 
-    pub fn execute(&mut self,)  {
+    pub fn execute(&mut self) {
         let instruction: (u8, u8) = self.fetch_opcode();
         self.decode(instruction);
-        
+
         if self.pc == 255 {
             println!("It's done!");
         } else {
-        self.pc += 1;     
+            self.pc += 1;
         }
-    } 
+    }
 
     pub fn fetch_opcode(&mut self) -> (u8, u8) {
         let first_part: u8 = self.memory.rom.rom_get_word(self.pc as usize) >> 4;
         let second_part: u8 = self.memory.rom.rom_get_word(self.pc as usize) & 0b00001111;
-        self.pc += 1 ;
+        self.pc += 1;
         (first_part, second_part)
-        
     }
 
-    pub fn decode(&mut self, (opr, opa): (u8,u8)) {
-            match opr { 
-                0 => (),
-                1 => self.jcn_opr(opa),
-                2 => match opa {
-                    0 => self.fim_opr(opa),
-                    1 => self.src_opr(opa),
-                    _ => panic!("ERROR: NO INSTRUCTION EXISTS")
-                }, 
-                3 => match opa {
-                    0 => self.fin_opr(opa),
-                    1 => self.jin_opr(opa),
-                    _ => ()
-                },
-                4 => self.jun_opr(opa),
-                5 => self.jms_opr(opa),
-                6 => self.inc_opr(opa),
-                7 => self.isz_opr(opa),
-                8 => self.add_opr(opa),
-                9 => self.sub_opr(opa),
-                10 => self.ld_opr(opa),
-                11 => self.xch_opr(opa),
-                12 => self.bbl_opr(opa),
-                13 => self.ldm_opr(opa),
-                14 => match opa {
-                    0 => self.wrm_opr(),
-                    1 => self.wmp_opr(),
-                    2 => self.wrr_opr(),
-                    3 => (),
-                    4 => self.wr0_opr(),
-                    5 => self.wr1_opr(),
-                    6 => self.wr2_opr(),
-                    7 => self.wr3_opr(),
-                    8 => self.sbm_opr(),
-                    9 => self.rdm_opr(),
-                    10 => self.rdr_opr(),
-                    11 => self.adm_opr(),
-                    12 => self.rd_0(),
-                    13 => self.rd_1(),
-                    14 => self.rd_2(),
-                    15 => self.rd_3(),
-                    _ => panic!("ERROR! NO FOLLOW INSTRUCTION EXISTS")
+    pub fn decode(&mut self, (opr, opa): (u8, u8)) {
+        match opr {
+            0 => (),
+            1 => self.jcn_opr(opa),
+            2 => match opa {
+                0 => self.fim_opr(opa),
+                1 => self.src_opr(opa),
+                _ => panic!("ERROR: NO INSTRUCTION EXISTS"),
+            },
+            3 => match opa {
+                0 => self.fin_opr(opa),
+                1 => self.jin_opr(opa),
+                _ => (),
+            },
+            4 => self.jun_opr(opa),
+            5 => self.jms_opr(opa),
+            6 => self.inc_opr(opa),
+            7 => self.isz_opr(opa),
+            8 => self.add_opr(opa),
+            9 => self.sub_opr(opa),
+            10 => self.ld_opr(opa),
+            11 => self.xch_opr(opa),
+            12 => self.bbl_opr(opa),
+            13 => self.ldm_opr(opa),
+            14 => match opa {
+                0 => self.wrm_opr(),
+                1 => self.wmp_opr(),
+                2 => self.wrr_opr(),
+                3 => (),
+                4 => self.wr0_opr(),
+                5 => self.wr1_opr(),
+                6 => self.wr2_opr(),
+                7 => self.wr3_opr(),
+                8 => self.sbm_opr(),
+                9 => self.rdm_opr(),
+                10 => self.rdr_opr(),
+                11 => self.adm_opr(),
+                12 => self.rd_0(),
+                13 => self.rd_1(),
+                14 => self.rd_2(),
+                15 => self.rd_3(),
+                _ => panic!("ERROR! NO FOLLOW INSTRUCTION EXISTS"),
+            },
+            15 => match opa {
+                0 => self.clb_opr(),
+                1 => self.clc_opr(),
+                2 => self.iac_opr(),
+                3 => self.cmc_opr(),
+                4 => self.cma_opr(),
+                5 => self.ral_opr(),
+                6 => self.rar_opr(),
+                7 => self.tcc_opr(),
+                8 => self.dac_opr(),
+                9 => self.tcs_opr(),
+                10 => self.stc_opr(),
+                11 => self.daa_opr(),
+                12 => self.kbp_opr(),
+                // 13 => self.dcl_opr(),
+                _ => panic!("ERROR! NO EXISTING INSTRUCTION"),
+            },
 
-                },
-                15 => match opa {
-                    0 => self.clb_opr(),
-                    1 => self.clc_opr(),
-                    2 => self.iac_opr(),
-                    3 => self.cmc_opr(),
-                    4 => self.cma_opr(),
-                    5 => self.ral_opr(),
-                    6 => self.rar_opr(),
-                    7 => self.tcc_opr(),
-                    8 => self.dac_opr(),
-                    9 => self.tcs_opr(),
-                    10 => self.stc_opr(),
-                    11 => self.daa_opr(),
-                    12 => self.kbp_opr(),
-                    // 13 => self.dcl_opr(),
-                    _ => panic!("ERROR! NO EXISTING INSTRUCTION")
-                },
-
-                _ => panic!("NO FOLLOW INSTRUCTIONS")
-            }
+            _ => panic!("NO FOLLOW INSTRUCTIONS"),
+        }
     }
     pub fn ram_read_char(&self) -> u8 {
         let decided_reg: u8 = self.x2 & 0b0011;
@@ -148,37 +143,40 @@ impl CPU {
     pub fn ram_write_char(&mut self, value: u8) {
         let decided_reg: u8 = self.x2 & 0b0011;
         let char_pointer: u8 = self.x3;
-        self.memory.ram.write_main_char(decided_reg, char_pointer, value)
+        self.memory
+            .ram
+            .write_main_char(decided_reg, char_pointer, value)
     }
 
-
     pub fn ram_read_status(&mut self, status_pointer: u8) -> u8 {
-        let decided_reg  = self.x2 & 0b0011;
-        self.memory.ram.read_status_char(decided_reg, status_pointer)
+        let decided_reg = self.x2 & 0b0011;
+        self.memory
+            .ram
+            .read_status_char(decided_reg, status_pointer)
     }
 
     pub fn ram_write_status(&mut self, status_pointer: u8, value: u8) {
         let decided_reg = self.x2 & 0b0011;
-        self.memory.ram.write_status_char(decided_reg, status_pointer, value)
+        self.memory
+            .ram
+            .write_status_char(decided_reg, status_pointer, value)
     }
-    
+
     pub fn ram_write_output(&mut self) {
         self.memory.ram.ram_write_output(self.a_r)
-    } 
+    }
 
     pub fn rom_read_port(&self) -> u8 {
         self.memory.rom.rom_read_port()
     }
-    
+
     pub fn rom_write_port(&mut self) {
         self.memory.rom.rom_write_port(self.a_r)
     }
 
+    // 1 word instructions
 
-
-    // 1 word instructions 
-
-    pub fn ldm_opr(&mut self, opa:u8){ 
+    pub fn ldm_opr(&mut self, opa: u8) {
         self.a_r = opa;
     }
 
@@ -192,12 +190,12 @@ impl CPU {
         self.index_registers[opa as usize] = temp
     }
 
-    pub fn add_opr(&mut self, opa: u8){
+    pub fn add_opr(&mut self, opa: u8) {
         if self.a_r + self.index_registers[opa as usize] + self.c_r > 15 {
             self.a_r = self.a_r & 0b1111;
             self.c_r = 1
         }
-        self.a_r += self.index_registers[opa as usize] + self.c_r & 0b1111 ;
+        self.a_r += self.index_registers[opa as usize] + self.c_r & 0b1111;
         self.c_r = 0
     }
 
@@ -212,44 +210,40 @@ impl CPU {
 
     pub fn inc_opr(&mut self, opa: u8) {
         self.index_registers[opa as usize] += 1;
-        if self.index_registers[opa as usize] > 15 { 
+        if self.index_registers[opa as usize] > 15 {
             self.index_registers[opa as usize] = 0;
         }
     }
 
-    pub fn fin_opr(&mut self, opa: u8, ) { 
+    pub fn fin_opr(&mut self, opa: u8) {
         let (data1, data2) = self.fetch_opcode();
         self.index_registers[(opa & 0b1110) as usize] = data1;
         self.index_registers[(opa & 0b1111) as usize] = data2;
-    } 
+    }
 
     pub fn jin_opr(&mut self, opa: u8) {
         let ph: u16 = self.pc >> 8;
         let pm: u8 = self.index_registers[(opa as usize) & 0b1110];
         let pl: u8 = self.index_registers[(opa as usize) & 0b1111];
-        self.pc = ph << 8 + (pm as u16) << 4 + pl as u16 
-
+        self.pc = ph << 8 + (pm as u16) << 4 + pl as u16
     }
 
     pub fn src_opr(&mut self, opa: u8) {
         self.x2 = self.index_registers[opa as usize & 0b1110];
         self.x3 = self.index_registers[opa as usize & 0b1111];
-
     }
-
 
     pub fn bbl_opr(&mut self, opa: u8) {
         self.stack_pop();
         self.a_r = opa;
     }
 
-
     // Input/Output and RAM Instructions
 
     pub fn rdm_opr(&mut self) {
         self.a_r = self.ram_read_char();
-    } 
-    
+    }
+
     pub fn rd_0(&mut self) {
         self.a_r = self.ram_read_status(0)
     }
@@ -286,8 +280,7 @@ impl CPU {
         self.ram_write_status(2, self.a_r)
     }
 
-    pub fn wr3_opr
-    (&mut self) {
+    pub fn wr3_opr(&mut self) {
         self.ram_write_status(3, self.a_r)
     }
 
@@ -305,14 +298,15 @@ impl CPU {
     }
 
     pub fn sbm_opr(&mut self) {
-        self.a_r = (((self.a_r as i8) - (self.ram_read_char() as i8) - (self.c_r as i8)) & 0b1111) as u8;
-    } 
+        self.a_r =
+            (((self.a_r as i8) - (self.ram_read_char() as i8) - (self.c_r as i8)) & 0b1111) as u8;
+    }
 
-    // accumulator group instructions 
-    
+    // accumulator group instructions
+
     pub fn clb_opr(&mut self) {
-      self.a_r = 0;
-      self.c_r = 0;  
+        self.a_r = 0;
+        self.c_r = 0;
     }
 
     pub fn clc_opr(&mut self) {
@@ -321,13 +315,13 @@ impl CPU {
 
     pub fn cmc_opr(&mut self) {
         self.c_r ^= 1;
-    } 
+    }
 
-    pub fn stc_opr (&mut self) {
+    pub fn stc_opr(&mut self) {
         self.c_r = 1;
     }
 
-    pub fn cma_opr (&mut self) {
+    pub fn cma_opr(&mut self) {
         self.a_r = !self.a_r & 0b1111;
     }
 
@@ -344,7 +338,7 @@ impl CPU {
             self.c_r = 1;
             self.a_r &= 0b1111
         }
-        self.c_r = 0    
+        self.c_r = 0
     }
 
     pub fn ral_opr(&mut self) {
@@ -355,13 +349,12 @@ impl CPU {
         }
         self.c_r = 0;
         self.a_r = self.a_r & 0b1111;
-
     }
 
     pub fn rar_opr(&mut self) {
         self.c_r = self.a_r >> 3;
-        self.a_r = self.a_r >> 1 + self.c_r << 3; 
-    } 
+        self.a_r = self.a_r >> 1 + self.c_r << 3;
+    }
 
     pub fn tcc_opr(&mut self) {
         self.a_r = self.c_r;
@@ -372,7 +365,7 @@ impl CPU {
         if self.a_r > 9 || self.c_r == 1 {
             self.a_r += 6;
         }
-        self.c_r = self.a_r >> 4; 
+        self.c_r = self.a_r >> 4;
         self.a_r &= 0b1111
     }
 
@@ -392,10 +385,10 @@ impl CPU {
             0b0010 => 0b0000,
             0b0100 => 0b0000,
             0b1000 => 0b0000,
-            _ => 0b1111
+            _ => 0b1111,
         }
     }
-    
+
     // pub fn dcl_opr(&mut self) {
     //     self.ram_bank = self.a_r & 0b111
     // }
@@ -416,19 +409,21 @@ impl CPU {
     pub fn jcn_opr(&mut self, opa: u8) {
         let (d1, d2) = self.fetch_opcode();
         let invert_condition = opa & 0b1000 == 0b1000;
-        let condition: bool = ((opa & 0b0100 == 0b0100) && self.a_r == 0) || ((opa & 0b0010 == 0b0010) && self.c_r == 1) || ((opa & 0b0001 == 0b0001) && false);
+        let condition: bool = ((opa & 0b0100 == 0b0100) && self.a_r == 0)
+            || ((opa & 0b0010 == 0b0010) && self.c_r == 1)
+            || ((opa & 0b0001 == 0b0001) && false);
         if (!condition && invert_condition) || (!invert_condition && condition) {
-            let ph = self.pc >> 8; 
-            self.pc = (ph << 8) + ((d2 as u16) << 4) + (d1 as u16) 
+            let ph = self.pc >> 8;
+            self.pc = (ph << 8) + ((d2 as u16) << 4) + (d1 as u16)
         }
-    } 
+    }
 
     pub fn isz_opr(&mut self, opa: u8) {
         let (d1, d2) = self.fetch_opcode();
         self.index_registers[opa as usize] += (self.index_registers[opa as usize] + 1) & 0b1111;
         if self.index_registers[opa as usize] != 0 {
             let ph = self.pc >> 8;
-            self.pc = (ph << 8) + ((d2 as u16) << 4) + (d1 as u16) 
+            self.pc = (ph << 8) + ((d2 as u16) << 4) + (d1 as u16)
         }
     }
 
@@ -437,6 +432,4 @@ impl CPU {
         self.index_registers[opa as usize & 0b1110] = d1;
         self.index_registers[opa as usize & 0b1111] = d2;
     }
-
 }
-
