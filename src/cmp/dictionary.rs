@@ -16,7 +16,7 @@ impl Instructions<'_> {
         opcodes.insert("JUN", 0x4);
         opcodes.insert("JMS", 0x5);
         opcodes.insert("INC", 0x6);
-        opcodes.insert("ISZ", 0x7);
+        opcodes.insert("ISZ", 0x70);
         opcodes.insert("ADD", 0x8);
         opcodes.insert("SUB", 0x9);
         opcodes.insert("LD", 0xA);

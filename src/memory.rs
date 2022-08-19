@@ -46,40 +46,31 @@ impl RAM {
     }
 }
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Clone, Debug)]
 pub struct ROM {
-    pub data: [u8; ROM_SIZE],
+    pub binary_vec: [u8; ROM_SIZE],
     io: u8,
-}
-
-impl Default for ROM {
-    fn default() -> Self {
-        Self::new(vec![0, ROM_SIZE as u8])
-    }
 }
 
 impl ROM {
     pub fn new(rom: Vec<u8>) -> ROM {
         let mut setup_rom: ROM = ROM {
-            data: [0; ROM_SIZE],
+            binary_vec: [0; ROM_SIZE],
             io: 0,
         };
 
-        (0..rom.len()).for_each(|x| {
-            if x > 2047 {
-                panic!("ERROR! Index is out of range!")
-            }
-            setup_rom.data[x] = rom[x]
-        });
+        for x in 0..rom.len() {
+            setup_rom.binary_vec[x] = rom[x];
+        }
 
         setup_rom
     }
 
     pub fn rom_get_word(&self, adress: usize) -> u8 {
-        if adress > 2047 {
+        if adress == ROM_SIZE {
             panic!("ERROR: Adress is out of range!")
         }
-        self.data[adress]
+        self.binary_vec[adress]
     }
 
     pub fn rom_read_port(&self) -> u8 {
@@ -91,7 +82,7 @@ impl ROM {
     }
 }
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Clone, Debug)]
 pub struct Memory {
     pub ram: RAM,
     pub rom: ROM,

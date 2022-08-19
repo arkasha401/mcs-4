@@ -56,7 +56,6 @@ impl Assembler<'static> {
                 self.labels_dict
                     .insert(tokens[0].replace(":", "").clone(), self.program_counter);
             }
-            println!("{:?}", self.labels_dict);
         }
     }
 
@@ -67,15 +66,14 @@ impl Assembler<'static> {
             let mut current_line = self.asm_code[self.program_counter].clone();
             self.program_counter += 1;
             if current_line.is_empty() {
-                continue;
+                panic!("ERROR:EMPTY LINE");
             }
             let tokens: Vec<String> = current_line
                 .split_whitespace()
                 .map(|s| s.to_string())
                 .collect();
-            println!("{:?}", tokens);
             if tokens[0] == "DONE:" {
-                break;
+                continue;
             } else if tokens[0].ends_with(':') {
                 continue;
             }
@@ -91,9 +89,8 @@ impl Assembler<'static> {
                     if tokens[0] == "JUN".to_string()
                         && self.labels_dict.contains_key(&tokens[1][..])
                     {
-                        temp += self.labels_dict[&tokens[1]] as u8;
+                        temp += self.labels_dict[&tokens[1][..]] as u8;
                         self.binary.push(temp);
-                        println!("{:?}", temp);
                     } else if tokens[1].parse::<u8>().unwrap() <= 15 {
                         temp += tokens[1].parse::<u8>().unwrap();
                         self.binary.push(temp);
@@ -105,21 +102,20 @@ impl Assembler<'static> {
                 if tokens.len() == 3 {
                     let mut temp = self.dictionary.opcodes[&tokens[0][..]];
                     if tokens[1].parse::<u8>().unwrap() <= 15 {
-                        println!("a");
+                        println!("{:?}", tokens[1].parse::<u8>().unwrap());
                         temp += tokens[1].parse::<u8>().unwrap();
                         self.binary.push(temp);
-                        temp = 0;
                         if self.labels_dict.contains_key(&tokens[2][..]) {
                             let mut temp: u8 = 0;
+                            println!("{}", tokens[2]);
                             temp += (self.labels_dict[&tokens[2][..]]) as u8;
-                            println!("{}", temp);
                             self.binary.push(temp);
                         } else {
                             panic!("ERROR INVALID LABEL")
                         }
                     }
                 }
-            } else if tokens[0] == "" {
+            } else {
                 panic!(
                     "LINE: {} ERROR: THIS INSTRUCTION DOESN'T EXIST.  {}",
                     self.program_counter, self.asm_code[self.program_counter]

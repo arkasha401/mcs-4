@@ -33,7 +33,7 @@ impl CPU {
     pub fn run(&mut self) {
         loop {
             self.execute();
-            if self.pc == 2047 {
+            if self.pc >= 2048 {
                 break;
             }
         }
@@ -57,10 +57,8 @@ impl CPU {
         let instruction: (u8, u8) = self.fetch_opcode();
         self.decode(instruction);
 
-        if self.pc == 255 {
+        if self.pc >= 2048 {
             println!("It's done!");
-        } else {
-            self.pc += 1;
         }
     }
 
@@ -436,7 +434,7 @@ impl CPU {
 
     pub fn display_info(&self) {
         println!(
-            "a_r{}, r0{}, r1{}",
+            "a_r = {}, r0 = {}, r1 = {}",
             self.a_r, self.index_registers[0], self.index_registers[1]
         )
     }
