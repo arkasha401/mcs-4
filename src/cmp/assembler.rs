@@ -59,7 +59,7 @@ impl Assembler<'static> {
         }
     }
 
-    pub fn compile(&mut self, filename: String) {
+    pub fn compile(&mut self, filename: String) -> Vec<u8> {
         self.precompile(filename);
         self.program_counter = 0;
         while self.program_counter < self.asm_code.len() {
@@ -76,11 +76,26 @@ impl Assembler<'static> {
 
             if self.dictionary.opcodes_lenght[0].contains(&&tokens[0][..]) {
                 self.binary.push(self.dictionary.opcodes[&tokens[0][..]]);
-            } else if self.dictionary.opcodes_lenght[1].contains(&&tokens[1][..]) {
-                unimplemented!()
+            } else if self.dictionary.opcodes_lenght[1].contains(&&tokens[0][..]) {
+                let mut temp = self.dictionary.opcodes[&tokens[0][..]];
+                if tokens[0] == "JUN" {
+                    if tokens[1].parse::<u8>().unwrap() <= 255 {
+                        self.binary.push(temp);
+                        temp = tokens[1].parse::<u8>().unwrap();
+                        self.binary.push(temp);
+                    } else if self.labels_dict.contains_key(&tokens[1]) {
+                        temp = self.labels_dict[&tokens[1]] as u8;
+                        self.binary.push(temp);
+                    }
+                } else {
+                    temp += tokens[1].parse::<u8>().unwrap();
+                    self.binary.push(temp)
+                }
             } else if self.dictionary.opcodes_lenght[2].contains(&&tokens[1][..]) {
             }
             unimplemented!()
         }
+
+        self.binary.clone()
     }
 }
