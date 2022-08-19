@@ -10,5 +10,5 @@ ADD     0
 
 TEST:   
 ISZ     1 LOOP
-DONE:   
-JUN     DONE
+DONE:
+JUN DONE

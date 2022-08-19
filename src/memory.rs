@@ -1,7 +1,7 @@
 const RAM_MAIN_MEMORY_CHARS: usize = 16;
 const RAM_STATUS_CHARS: usize = 4;
 const NUMBER_OF_REGISTERS: usize = 4;
-const ROM_SIZE: usize = 2047;
+const ROM_SIZE: usize = 2048;
 
 #[derive(Copy, Clone, Debug)]
 pub struct Register {

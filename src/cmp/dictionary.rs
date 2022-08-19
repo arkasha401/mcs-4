@@ -35,21 +35,21 @@ impl Instructions<'_> {
         opcodes.insert("RDM", 0xE);
         opcodes.insert("RDR", 0xE);
         opcodes.insert("ADM", 0xE);
-        opcodes.insert("RD0", 0xE);
-        opcodes.insert("RD1", 0xF);
-        opcodes.insert("CLC", 0xF);
-        opcodes.insert("IAC", 0xF);
-        opcodes.insert("CMC", 0xF);
-        opcodes.insert("CMA", 0xF);
-        opcodes.insert("RAL", 0xF);
-        opcodes.insert("RAR", 0xF);
-        opcodes.insert("TCC", 0xF);
-        opcodes.insert("DAC", 0xF);
-        opcodes.insert("TCS", 0xF);
-        opcodes.insert("STC", 0xF);
-        opcodes.insert("DAA", 0xF);
-        opcodes.insert("KBP", 0xF);
-        opcodes.insert("DCL", 0xF);
+        opcodes.insert("RD0", 0xEC);
+        opcodes.insert("RD1", 0xED);
+        opcodes.insert("CLC", 0xF1);
+        opcodes.insert("CLB", 0xF0);
+        opcodes.insert("IAC", 0xF2);
+        opcodes.insert("CMC", 0xF3);
+        opcodes.insert("CMA", 0xF4);
+        opcodes.insert("RAL", 0xF5);
+        opcodes.insert("RAR", 0xF6);
+        opcodes.insert("TCC", 0xF7);
+        opcodes.insert("DAC", 0xF8);
+        opcodes.insert("TCS", 0xF9);
+        opcodes.insert("STC", 0xFA);
+        opcodes.insert("DAA", 0xFB);
+        opcodes.insert("KBP", 0xFC);
 
         let one_word = vec![
             "RDM", "RD0", "RD1", "RD2", "RD3", "RDR", "WRM", "WR0", "WR1", "WR2", "WR3", "WRR",
@@ -57,9 +57,9 @@ impl Instructions<'_> {
             "TCC", "DAA", "TCS", "KBP",
         ];
         let two_words = vec![
-            "LDM", "LD", "XCH", "ADD", "SUB", "INC", "BBL", "JIN", "SRC", "FIN",
+            "JUN", "LDM", "LD", "XCH", "ADD", "SUB", "INC", "BBL", "JIN", "SRC", "FIN",
         ];
-        let three_words = vec!["JUN", "JMS", "JCN", "ISZ", "FIM"];
+        let three_words = vec!["JMS", "JCN", "ISZ", "FIM"];
 
         let opcodes_lenght: [Vec<&str>; 3] = [one_word, two_words, three_words];
         Instructions {

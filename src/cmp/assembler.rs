@@ -54,9 +54,9 @@ impl Assembler<'static> {
                 .collect();
             if tokens[0].ends_with(':') {
                 self.labels_dict
-                    .insert(tokens[0].clone(), self.program_counter);
+                    .insert(tokens[0].replace(":", "").clone(), self.program_counter);
             }
-            println!("{:?}", tokens);
+            println!("{:?}", self.labels_dict);
         }
     }
 
@@ -69,13 +69,14 @@ impl Assembler<'static> {
             if current_line.is_empty() {
                 continue;
             }
-
             let tokens: Vec<String> = current_line
                 .split_whitespace()
                 .map(|s| s.to_string())
                 .collect();
             println!("{:?}", tokens);
-            if tokens[0].ends_with(':') {
+            if tokens[0] == "DONE:" {
+                break;
+            } else if tokens[0].ends_with(':') {
                 continue;
             }
             if self.dictionary.opcodes_lenght[0].contains(&&tokens[0][..]) {
@@ -87,30 +88,38 @@ impl Assembler<'static> {
             } else if self.dictionary.opcodes_lenght[1].contains(&&tokens[0][..]) {
                 if tokens.len() == 2 {
                     let mut temp = self.dictionary.opcodes[&tokens[0][..]] << 4;
-                    if tokens[1].parse::<u8>().unwrap() <= 15 {
+                    if tokens[0] == "JUN".to_string()
+                        && self.labels_dict.contains_key(&tokens[1][..])
+                    {
+                        temp += self.labels_dict[&tokens[1]] as u8;
+                        self.binary.push(temp);
+                        println!("{:?}", temp);
+                    } else if tokens[1].parse::<u8>().unwrap() <= 15 {
                         temp += tokens[1].parse::<u8>().unwrap();
                         self.binary.push(temp);
-                    } else {
-                        panic!("ERROR: OUT OF RANGE")
                     }
                 } else {
                     panic!("LINE: ERROR: TOO MANY OPERANDS");
                 }
             } else if self.dictionary.opcodes_lenght[2].contains(&&tokens[0][..]) {
                 if tokens.len() == 3 {
-                    let mut temp = self.dictionary.opcodes[&tokens[0][..]] << 4;
+                    let mut temp = self.dictionary.opcodes[&tokens[0][..]];
                     if tokens[1].parse::<u8>().unwrap() <= 15 {
+                        println!("a");
                         temp += tokens[1].parse::<u8>().unwrap();
                         self.binary.push(temp);
+                        temp = 0;
                         if self.labels_dict.contains_key(&tokens[2][..]) {
                             let mut temp: u8 = 0;
-                            temp += (self.labels_dict[&tokens[2][..]] & 0b000011110000) as u8;
-                            temp += (self.labels_dict[&tokens[2][..]] & 0b000000001111) as u8;
+                            temp += (self.labels_dict[&tokens[2][..]]) as u8;
+                            println!("{}", temp);
                             self.binary.push(temp);
+                        } else {
+                            panic!("ERROR INVALID LABEL")
                         }
                     }
                 }
-            } else {
+            } else if tokens[0] == "" {
                 panic!(
                     "LINE: {} ERROR: THIS INSTRUCTION DOESN'T EXIST.  {}",
                     self.program_counter, self.asm_code[self.program_counter]
@@ -120,7 +129,7 @@ impl Assembler<'static> {
         for i in self.binary.clone() {
             println!("{:X}", i)
         }
-
+        println!("{:?}", self.binary);
         self.binary.clone()
     }
 }
