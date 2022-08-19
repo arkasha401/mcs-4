@@ -1,11 +1,14 @@
-        LDM     4
-        XCH     r0
+        LDM	4
+        XCH     0
         LDM     2
         CMA
-        XCH     r1
+        XCH     1
         LDM     0
         JUN     TEST 
-LOOP:   ADD     r0
+LOOP:   
+ADD     0
 
-TEST:   ISZ     r1, LOOP
-DONE:   JUN     DONE
+TEST:   
+ISZ     1 LOOP
+DONE:   
+JUN     DONE

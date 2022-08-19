@@ -2,6 +2,8 @@ use crate::memory::Memory;
 use core::panic;
 
 const MAX_INDEX_REGISTERS: usize = 16;
+
+#[derive(Debug)]
 pub struct CPU {
     a_r: u8, //u4
     c_r: u8, //u1
@@ -28,11 +30,10 @@ impl CPU {
             memory: memory,
         }
     }
-    #[warn(unconditional_recursion)]
     pub fn run(&mut self) {
         loop {
             self.execute();
-            if self.pc == 255 {
+            if self.pc == 2047 {
                 break;
             }
         }
@@ -431,5 +432,12 @@ impl CPU {
         let (d1, d2) = self.fetch_opcode();
         self.index_registers[opa as usize & 0b1110] = d1;
         self.index_registers[opa as usize & 0b1111] = d2;
+    }
+
+    pub fn display_info(&self) {
+        println!(
+            "a_r{}, r0{}, r1{}",
+            self.a_r, self.index_registers[0], self.index_registers[1]
+        )
     }
 }

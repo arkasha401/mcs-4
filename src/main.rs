@@ -6,12 +6,10 @@ use cpu::CPU;
 use std::env;
 
 pub fn main() {
-    let mems = memory::Memory::new(vec![0b0000, 0b0000]);
-    let mut cpu = CPU::new(mems);
-    let d = cmp::dictionary::Instructions::new();
+    let filename: String = env::args().nth(1).unwrap();
     let mut c = cmp::assembler::Assembler::new();
-    let filename: String = env::args().skip(1).collect();
+    let mems = memory::Memory::new(c.compile(filename));
+    let mut cpu = CPU::new(mems);
     cpu.run();
-
-    c.compile(filename);
+    cpu.display_info();
 }
