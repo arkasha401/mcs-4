@@ -83,7 +83,7 @@ impl CPU {
                 1 => self.jin_opr(opa),
                 _ => (),
             },
-            4 => self.jun_opr(opa),
+            4 => self.jun_opr(),
             5 => self.jms_opr(opa),
             6 => self.inc_opr(opa),
             7 => self.isz_opr(opa),
@@ -394,9 +394,9 @@ impl CPU {
 
     // 2 words instructions
 
-    pub fn jun_opr(&mut self, opa: u8) {
+    pub fn jun_opr(&mut self) {
         let (d1, d2) = self.fetch_opcode();
-        self.pc = ((opa as u16) << 8) + ((d2 as u16) << 4) + d1 as u16
+        self.pc = (d2 as u16) << 4 + (d1 as u16);
     }
 
     pub fn jms_opr(&mut self, opa: u8) {
@@ -422,7 +422,7 @@ impl CPU {
         self.index_registers[opa as usize] += (self.index_registers[opa as usize] + 1) & 0b1111;
         if self.index_registers[opa as usize] != 0 {
             let ph = self.pc >> 8;
-            self.pc = (ph << 8) + ((d2 as u16) << 4) + (d1 as u16)
+            self.pc = ((ph << 8) + ((d2 as u16) << 4) + (d1 as u16)) + 1
         }
     }
 

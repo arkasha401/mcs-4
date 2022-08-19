@@ -13,7 +13,7 @@ impl Instructions<'_> {
         opcodes.insert("SRC", 0x2);
         opcodes.insert("FIN", 0x3);
         opcodes.insert("JIN", 0x3);
-        opcodes.insert("JUN", 0x4);
+        opcodes.insert("JUN", 0x40);
         opcodes.insert("JMS", 0x5);
         opcodes.insert("INC", 0x6);
         opcodes.insert("ISZ", 0x70);

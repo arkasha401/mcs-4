@@ -8,6 +8,4 @@
 LOOP:   
 ADD     0
 TEST:   
-ISZ     1 LOOP
-DONE:
-JUN DONE
+ISZ    	 1 LOOP
