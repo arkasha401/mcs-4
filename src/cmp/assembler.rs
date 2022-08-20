@@ -91,7 +91,15 @@ impl Assembler<'static> {
                     temp += tokens[1].parse::<u8>().unwrap();
                     self.binary.push(temp)
                 }
-            } else if self.dictionary.opcodes_lenght[2].contains(&&tokens[1][..]) {
+            } else if self.dictionary.opcodes_lenght[2].contains(&&tokens[0][..]) {
+                let mut temp = self.dictionary.opcodes[&&tokens[0][..]];
+                if tokens[1].parse::<u8>().unwrap() <= 15 {
+                    temp += tokens[1].parse::<u8>().unwrap();
+                    self.binary.push(temp);
+                    if tokens[2].parse::<u8>().unwrap() <= 15 {
+                        temp = tokens[2].parse::<u8>().unwrap()
+                    }
+                }
             }
             unimplemented!()
         }
