@@ -33,7 +33,7 @@ impl CPU {
     pub fn run(&mut self) {
         loop {
             self.execute();
-            println!("{}, {}, {}, {:?}, {}, {:?}", self.a_r, self.c_r, self.pc, self.stack, self.stack_p, self.index_registers);
+            //println!("{}, {}, {}, {:?}, {}, {:?}", self.a_r, self.c_r, self.pc, self.stack, self.stack_p, self.index_registers);
             if self.pc >= 2048 {
                 break;
             }
@@ -56,7 +56,7 @@ impl CPU {
 
     pub fn execute(&mut self) {
         let instruction: (u8, u8) = self.fetch_opcode();
-        self.decode(instruction); 
+        self.decode(instruction);
         if self.pc >= 2048 {
             println!("It's done!");
         }
@@ -192,7 +192,7 @@ impl CPU {
 
     pub fn add_opr(&mut self, opa: u8) {
         if self.a_r + self.index_registers[opa as usize] + self.c_r > 15 {
-            self.a_r +=  (self.index_registers[opa as usize] + self.c_r) & 0b1111;
+            self.a_r += (self.index_registers[opa as usize] + self.c_r) & 0b1111;
             self.c_r = 1
         }
         self.a_r += (self.index_registers[opa as usize] + self.c_r) & 0b1111;
@@ -209,7 +209,7 @@ impl CPU {
     }
 
     pub fn inc_opr(&mut self, opa: u8) {
-       (self.index_registers[opa as usize] + 1) & 0b1111;
+        (self.index_registers[opa as usize] + 1) & 0b1111;
     }
 
     pub fn fin_opr(&mut self, opa: u8) {
@@ -415,16 +415,13 @@ impl CPU {
     }
 
     pub fn isz_opr(&mut self, opa: u8) {
-         let (d1 , d2) = self.fetch_opcode();
-         self.index_registers[opa as usize] = (self.index_registers[opa as usize] + 1) % 15;
-
+        let (d1, d2) = self.fetch_opcode();
+        self.index_registers[opa as usize] = (self.index_registers[opa as usize] + 1) % 15;
 
         if self.index_registers[opa as usize] != 0 {
             let ph = self.pc >> 8;
             self.pc = (ph << 8) + ((d1 as u16) << 4) + (d2 as u16);
         }
-    
-    
     }
 
     pub fn fim_opr(&mut self, opa: u8) {
