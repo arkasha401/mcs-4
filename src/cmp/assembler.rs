@@ -54,7 +54,7 @@ impl Assembler<'static> {
                 .collect();
             if tokens[0].ends_with(':') {
                 self.labels_dict
-                    .insert(tokens[0].replace(":", "").clone(), self.program_counter);
+                    .insert(tokens[0].replace(":", "").clone(), self.program_counter + 1);
             }
         }
     }
@@ -73,37 +73,45 @@ impl Assembler<'static> {
                 .split_whitespace()
                 .map(|s| s.to_string())
                 .collect();
+            if tokens[0].ends_with(':') {
+                continue;
+            }
 
+            println!("TOKENS: {:?}", tokens);
             if self.dictionary.opcodes_lenght[0].contains(&&tokens[0][..]) {
                 self.binary.push(self.dictionary.opcodes[&tokens[0][..]]);
             } else if self.dictionary.opcodes_lenght[1].contains(&&tokens[0][..]) {
                 let mut temp = self.dictionary.opcodes[&tokens[0][..]];
                 if tokens[0] == "JUN" {
-                    if tokens[1].parse::<u8>().unwrap() <= 255 {
-                        self.binary.push(temp);
-                        temp = tokens[1].parse::<u8>().unwrap();
-                        self.binary.push(temp);
-                    } else if self.labels_dict.contains_key(&tokens[1]) {
+                    if self.labels_dict.contains_key(&tokens[1]) {      
                         temp = self.labels_dict[&tokens[1]] as u8;
                         self.binary.push(temp);
-                    }
+                     } else if tokens[1].parse::<u8>().unwrap() <= 255 {
+                     self.binary.push(temp);
+                     temp = tokens[1].parse::<u8>().unwrap();
+                     self.binary.push(temp);
+                   }
                 } else {
+                    
                     temp += tokens[1].parse::<u8>().unwrap();
                     self.binary.push(temp)
                 }
             } else if self.dictionary.opcodes_lenght[2].contains(&&tokens[0][..]) {
                 let mut temp = self.dictionary.opcodes[&&tokens[0][..]];
-                if tokens[1].parse::<u8>().unwrap() <= 15 {
+                if tokens[1].parse::<u8>().unwrap() <= 255 {
                     temp += tokens[1].parse::<u8>().unwrap();
                     self.binary.push(temp);
-                    if tokens[2].parse::<u8>().unwrap() <= 15 {
-                        temp = tokens[2].parse::<u8>().unwrap()
-                    }
-                }
-            }
-            unimplemented!()
-        }
 
+                    }  if self.labels_dict.contains_key(&tokens[2]) {
+                        temp = self.labels_dict[&tokens[2]] as u8
+                    } else if tokens[2].parse::<u8>().unwrap() <= 255 {
+                        temp = tokens[2].parse::<u8>().unwrap();
+                        self.binary.push(temp);
+                }
+            } else {
+            panic!("ERROR: TOO MANY OPERANDS");
+            }
+        }
         self.binary.clone()
     }
 }
