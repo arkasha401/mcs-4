@@ -54,7 +54,7 @@ impl Assembler<'static> {
                 .collect();
             if tokens[0].ends_with(':') {
                 self.labels_dict
-                    .insert(tokens[0].replace(":", "").clone(), self.program_counter);
+                    .insert(tokens[0].replace(":", "").clone(), self.program_counter - 1);
             }
         }
     }
@@ -77,13 +77,14 @@ impl Assembler<'static> {
                 continue;
             }
 
-            println!("TOKENS: {:?}", tokens);
+            //println!("TOKENS: {:?}", tokens);
             if self.dictionary.opcodes_lenght[0].contains(&&tokens[0][..]) {
                 self.binary.push(self.dictionary.opcodes[&tokens[0][..]]);
             } else if self.dictionary.opcodes_lenght[1].contains(&&tokens[0][..]) {
                 let mut temp = self.dictionary.opcodes[&tokens[0][..]];
                 if tokens[0] == "JUN" {
                     if self.labels_dict.contains_key(&tokens[1]) {
+                        self.binary.push(temp);
                         temp = self.labels_dict[&tokens[1]] as u8;
                         self.binary.push(temp);
                     } else if tokens[1].parse::<u8>().unwrap() <= 255 {
@@ -112,7 +113,7 @@ impl Assembler<'static> {
                 panic!("ERROR: TOO MANY OPERANDS");
             }
         }
-        println!("{:X?}", self.binary);
+        //println!("{:?}", self.labels_dict);
         self.binary.clone()
     }
 }

@@ -27,14 +27,15 @@ impl CPU {
             stack: [0; 3],
             stack_p: 0, // u3
             index_registers: [0; MAX_INDEX_REGISTERS],
-            memory: memory,
+            memory,
         }
     }
     pub fn run(&mut self) {
         loop {
             self.execute();
-            //println!("{}, {}, {}, {:?}, {}, {:?}", self.a_r, self.c_r, self.pc, self.stack, self.stack_p, self.index_registers);
+            println!("{} ", self.a_r);
             if self.pc >= 2048 {
+                println!("done");
                 break;
             }
         }
@@ -60,12 +61,13 @@ impl CPU {
         if self.pc >= 2048 {
             println!("It's done!");
         }
-        self.pc += 1;
     }
 
     pub fn fetch_opcode(&mut self) -> (u8, u8) {
         let first_part: u8 = self.memory.rom.rom_get_word(self.pc as usize) >> 4;
         let second_part: u8 = self.memory.rom.rom_get_word(self.pc as usize) & 0b00001111;
+        self.pc += 1;
+        //println!("{}, {}", first_part, second_part);
         (first_part, second_part)
     }
 
@@ -83,10 +85,13 @@ impl CPU {
                 1 => self.jin_opr(opa),
                 _ => (),
             },
-            4 => self.jun_opr(),
+            4 => self.jun_opr(opa),
             5 => self.jms_opr(opa),
             6 => self.inc_opr(opa),
-            7 => self.isz_opr(opa),
+            7 => {
+                self.isz_opr(opa);
+                println!("a")
+            }
             8 => self.add_opr(opa),
             9 => self.sub_opr(opa),
             10 => self.ld_opr(opa),
@@ -392,9 +397,9 @@ impl CPU {
 
     // 2 words instructions
 
-    pub fn jun_opr(&mut self) {
+    pub fn jun_opr(&mut self, opa: u8) {
         let (d1, d2) = self.fetch_opcode();
-        self.pc = (d2 as u16) << 4 + (d1 as u16);
+        self.pc = ((opa as u16) << 8) + ((d1 as u16) << 4) + d2 as u16;
     }
 
     pub fn jms_opr(&mut self, opa: u8) {
@@ -416,7 +421,9 @@ impl CPU {
 
     pub fn isz_opr(&mut self, opa: u8) {
         let (d1, d2) = self.fetch_opcode();
-        self.index_registers[opa as usize] = (self.index_registers[opa as usize] + 1) % 15;
+        println!("{}, {}", d1, d2);
+
+        self.index_registers[opa as usize] += (self.index_registers[opa as usize] + 1) % 16;
 
         if self.index_registers[opa as usize] != 0 {
             let ph = self.pc >> 8;
