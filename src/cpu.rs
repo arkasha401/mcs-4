@@ -6,6 +6,7 @@ const MAX_INDEX_REGISTERS: usize = 16;
 #[derive(Debug)]
 pub struct CPU {
     a_r: u8, //u4
+    //
     c_r: u8, //u1
     x2: u8,
     x3: u8,
@@ -33,9 +34,8 @@ impl CPU {
     pub fn run(&mut self) {
         loop {
             self.execute();
-            println!("{} ", self.a_r);
             if self.pc >= 2048 {
-                println!("done");
+                println!("pc = {}", self.pc);
                 break;
             }
         }
@@ -90,7 +90,6 @@ impl CPU {
             6 => self.inc_opr(opa),
             7 => {
                 self.isz_opr(opa);
-                println!("a")
             }
             8 => self.add_opr(opa),
             9 => self.sub_opr(opa),
@@ -196,11 +195,12 @@ impl CPU {
     }
 
     pub fn add_opr(&mut self, opa: u8) {
-        if self.a_r + self.index_registers[opa as usize] + self.c_r > 15 {
-            self.a_r += (self.index_registers[opa as usize] + self.c_r) & 0b1111;
+        println!("{}", self.a_r);
+        if (self.a_r + self.index_registers[opa as usize] + self.c_r) > 15 {
+            self.a_r = (self.a_r + self.index_registers[opa as usize] + self.c_r) & 0b1111;
             self.c_r = 1
         }
-        self.a_r += (self.index_registers[opa as usize] + self.c_r) & 0b1111;
+        self.a_r = (self.a_r + self.index_registers[opa as usize] + self.c_r) & 0b1111;
         self.c_r = 0
     }
 
@@ -214,7 +214,7 @@ impl CPU {
     }
 
     pub fn inc_opr(&mut self, opa: u8) {
-        (self.index_registers[opa as usize] + 1) & 0b1111;
+        self.index_registers[opa as usize] = self.index_registers[opa as usize] + 1 & 0b1111;
     }
 
     pub fn fin_opr(&mut self, opa: u8) {
@@ -319,9 +319,7 @@ impl CPU {
         self.c_r ^= 1;
     }
 
-    pub fn stc_opr(&mut self) {
-        self.c_r = 1;
-    }
+    pub fn stc_opr(&mut self) {}
 
     pub fn cma_opr(&mut self) {
         self.a_r = !self.a_r & 0b1111;
@@ -421,10 +419,7 @@ impl CPU {
 
     pub fn isz_opr(&mut self, opa: u8) {
         let (d1, d2) = self.fetch_opcode();
-        println!("{}, {}", d1, d2);
-
-        self.index_registers[opa as usize] += (self.index_registers[opa as usize] + 1) % 16;
-
+        self.index_registers[opa as usize] = (self.index_registers[opa as usize] + 1) & 0b1111;
         if self.index_registers[opa as usize] != 0 {
             let ph = self.pc >> 8;
             self.pc = (ph << 8) + ((d1 as u16) << 4) + (d2 as u16);
